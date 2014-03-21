@@ -21,7 +21,7 @@ include_once 'ViewDescriptor.php';
 <html>
     <head>
         <title><?= $vd->getTitolo() ?></title>
-        <link rel="shortcut icon" href="../../images/favicon.ico">
+        <link rel="shortcut icon" href="../../site_images/favicon.ico">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="">
