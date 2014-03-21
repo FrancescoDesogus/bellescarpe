@@ -1,18 +1,18 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title></title>
-    </head>
-    <body>
-        <?php
-        // put your code here
-        echo "albero";
-        ?>
-    </body>
-</html>
+ <?php
+        $username = "bellescarpecod";
+        $password = "albero";
+        $host = "localhost";
+      $database = "my_bellescarpecod";
+     
+          $db = mysql_connect($host, $username, $password) or die("Errore durante la connessione al database");
+      mysql_select_db($database, $db) or die("Errore durante la selezione del database");
+      
+      $risultato = mysql_query("SELECT * FROM Scarpa")
+    	or die("Query non valida: " . mysql_error());
+        
+      $poba = mysql_fetch_object($risultato);
+      
+      echo $poba->id_scarpa;
+      echo $poba->marca;
+      echo $poba->modello;
+  ?>
