@@ -16,7 +16,7 @@
 
   <body>
       <!-- Docs master nav -->
-    <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+<!--    <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
         <div class="container">
           <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -76,7 +76,7 @@
         </div>
         
         <div class="panel panel-primary">
-            <!-- Default panel contents -->
+             Default panel contents 
             <div class="panel-heading">Cosa vuoi fare?</div>
             <div class="list-group">
                 <a href="#" class="list-group-item">Inserimento Esami <span class="glyphicon glyphicon-circle-arrow-right"></span> </a>
@@ -88,7 +88,42 @@
 
         
 
-    </div> <!-- /container -->
+    </div>  /container -->
+
+
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div class="item active">
+      <img src="../site_images/logo.jpg" alt="...">
+      <div class="carousel-caption">
+          <p> lolol </p>
+      </div>
+    </div>
+      
+    <div class="item">
+      <img src="../site_images/logo.jpg" alt="...">
+      <div class="carousel-caption">
+          <p> lelel </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left"></span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+  </a>
+</div>
 
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="../js/bootstrap.js"></script>
