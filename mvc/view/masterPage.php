@@ -21,8 +21,9 @@ include_once basename(__DIR__) . '/../Settings.php';
         <meta name="keywords" content="bellescarpe" />
         <meta name="description" content="Negozio di scarpe" />
         <link rel="shortcut icon" href="../images/favicon.ico" />
-        <script type="text/javascript" src="../javascript/jquery-1.9.1.min.js"></script>
- 
+        <script type="text/javascript" src="../js/jquery-2.0.3.js"></script>
+        <script type="text/javascript" src="../js/jquery-ui.js"></script>
+        <link rel="stylesheet" href="../css/bootstrap.css">
         <link href="../css/fixed.css" rel="stylesheet" type="text/css" media="screen" />
 
     </head>
