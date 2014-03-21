@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="shortcut icon" href="../images/favicon.ico">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <link href="../css/login.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/jquery-2.0.3.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.js"></script>
+
+    <title>Moodle - Login</title>
+    
+     <script type="text/javascript">
+            $(function(){
+              //$('.error').hide();
+                $('.btn-lg').prop('disabled', true);
+                
+                $('input').keyup(function(){
+                    validate($('#user').val(), $('#passw').val());
+                });
+                
+                function validate(username, passw){
+                  var regexp;
+                  regexp = new RegExp("^\s*[0-9a-zA-Z][0-9a-zA-Z ]*$");
+                  
+                  var match_user = regexp.test(username);
+                  var match_passw = regexp.test(passw);
+                  
+                  if(match_user){
+                  	$('#user').removeClass("input-error");
+                    $('#user').addClass("input-success");
+                  }
+                  else{
+                    $('#user').addClass("input-error");
+                    $('#user').removeClass("input-success");
+                  }
+                  
+                  if(match_passw){
+                  	$('#passw').removeClass("input-error");
+                    $('#passw').addClass("input-success");
+                  }
+                  else{
+                    $('#passw').addClass("input-error");
+                    $('#passw').removeClass("input-success");
+                  }
+                  
+                  $('.btn-lg').prop('disabled', !(match_user && match_passw));
+                }
+            });
+        </script>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin" role="form" action="../html/sito.php">
+        <h2 class="form-signin-heading">Login</h2>
+        <input id="user" type="text" class="form-control" placeholder="Username" required autofocus>
+        <input id="passw" type="password" class="form-control" placeholder="Password" required>
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Ricordami
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit"> Login </button>
+      </form>
+
+    </div> <!-- /container -->
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../js/bootstrap.js"></script>
+    
+  </body>
+</html>
