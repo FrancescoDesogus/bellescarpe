@@ -1,4 +1,10 @@
      <!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+     
+     <?php
+     echo $shoe->getBrand();
+     echo "aaaaaaa";
+     ?>
+     
       <div id="blueimp-gallery" class="blueimp-gallery">
           <!-- The container for the modal slides -->
           <div class="slides"></div>
@@ -42,6 +48,8 @@
             <a href="../site_images/orange.jpg" title="Orange" data-gallery>
              arancia</a>
         </div>
+     
+     
             
         <script src="../js/jquery-2.0.3.js"></script>
         <script src="../js/jquery.blueimp-gallery.min.js"></script>

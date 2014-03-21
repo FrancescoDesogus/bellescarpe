@@ -3,8 +3,8 @@
 include_once basename(__DIR__) . '/../view/ViewDescriptor.php';
 //include_once basename(__DIR__) . '/../model/User.php';
 //include_once basename(__DIR__) . '/../model/UserFactory.php';
-//include_once basename(__DIR__) . '/../model/Book.php';
-//include_once basename(__DIR__) . '/../model/BookFactory.php';
+include_once basename(__DIR__) . '/../model/Shoe.php';
+include_once basename(__DIR__) . '/../model/ShoeFactory.php';
 include_once 'BaseController.php';
 
 /**
@@ -50,6 +50,7 @@ class GuestController extends BaseController
                 case 'shoe_details':                 
                     $viewDescriptor->setSubPage('shoe_details');
 
+                    $shoe = ShoeFactory::getShoeFromId(1);
                     
                     break;
                 
