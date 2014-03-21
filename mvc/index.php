@@ -1,78 +1,93 @@
 <?php
 
-include_once 'controller/BaseController.php';
-//include_once 'controller/StudenteController.php';
-//include_once 'controller/DocenteController.php';
-//include_once 'controller/AmministratoreController.php';
 
-// punto unico di accesso all'applicazione
+include_once 'controller/BaseController.php';
+//include_once 'controller/AdminController.php';
+//include_once 'controller/CustomerController.php';
+//include_once 'controller/RetailerController.php';
+include_once 'controller/GuestController.php';
+include_once 'view/ViewDescriptor.php';
+
+
+//Punto unico di accesso al sito
 FrontController::dispatch($_REQUEST);
 
 /**
  * Classe che controlla il punto unico di accesso all'applicazione
- * @author Davide Spano
  */
-class FrontController {
+class FrontController 
+{
+    
+    //Costruttore
+    public function __construct() 
+    {
+        
+    }
 
     /**
      * Gestore delle richieste al punto unico di accesso all'applicazione
-     * @param array $request i parametri della richiesta
+     * 
+     * @param array $request contenente i parametri della richiesta
      */
-    public static function dispatch(&$request) {
-        // inizializziamo la sessione 
+    public static function dispatch(&$request) 
+    {
+        //Inizializzo la sessione come prima cosa (o riprendo quella precedente se c'è)
         session_start();
-        if (isset($request["page"])) {
-
-            switch ($request["page"]) {
-                case "login":
-                    // la pagina di login e' accessibile a tutti,
-                    // la facciamo gestire al BaseController
-                    $controller = new BaseController();
+                
+        if(isset($_REQUEST["page"])) 
+        {
+            switch($_REQUEST["page"]) 
+            {
+                case "guest":
+                    
+                    //Se si è nella pagina di login, creo il controller di base
+                    //per la ricezione degli input
+                    $controller = new GuestController();
                     $controller->handleInput($request, $_SESSION);
                     break;
 
-                /* studente
-                case 'studente':
-                    // la pagina degli studenti e' accessibile solo
-                    // agli studenti ed agli amminstratori
-                    // il controllo viene fatto dal controller apposito
-                    $controller = new StudenteController();
-                    $sessione = &$controller->getSessione($request);
-                    if (!isset($sessione)) {
+                case 'admin':
+                    //Se la pagina è della categoria admin, creo il controller
+                    //per gli admin che si occupa di controllare gli input
+                    $controller = new AdminController();
+                                       
+                    $session = &$controller->getSession();
+                    
+                    if(!isset($session)) 
                         self::write403();
-                    }
-                    $controller->handleInput($request, $sessione);
+                    
+                    $controller->handleInput($request, $session);
                     break;
 
-                // docente
-                case 'docente':
-                    // la pagina dei docenti e' accessibile solo
-                    // ai docenti ed agli amminstratori
-                    // il controllo viene fatto dal controller apposito
-                    $controller = new DocenteController();
-                    $sessione = &$controller->getSessione($request);
-                    if (!isset($sessione)) {
+                case 'customer':
+                    //Se la pagina è della categoria customer, creo il controller
+                    //per i clienti che si occupa di controllare gli input
+                    $controller = new CustomerController();
+    
+                    $session = &$controller->getSession($request);
+                    
+                    if(!isset($session)) 
                         self::write403();
-                    }
-                    $controller->handleInput($request, $sessione);
+                    
+                    $controller->handleInput($request, $session);
                     break;
 
-                // amministratore
-                case 'amministratore':
-                    // la pagina degli amministratori e' accessibile solo
-                    // agli amministratori
-                    // il controllo viene fatto dal controller apposito
-                    $controller = new AmministratoreController();
-                    $sessione = &$controller->getSessione();
-                    if (!isset($sessione)) {
+                case 'retailer':
+                    //Se la pagina è della categoria retailer, creo il controller
+                    //per i commercianti che si occupa di controllare gli input
+                    $controller = new RetailerController();
+                    
+                    $session = &$controller->getSession($request);
+  
+                    if(!isset($session)) 
                         self::write403();
-                    }
-                    $controller->handleInput($request, $sessione);
-                    break; */
+                    
+                    $controller->handleInput($request, $session);
+                    break;
 
                 default:
                     self::write404();
-                    break;
+                    break;                    
             }
         } else {
             self::write404();
@@ -82,26 +97,36 @@ class FrontController {
     /**
      * Crea una pagina di errore quando il path specificato non esiste
      */
-    public static function write404() {
-        // impostiamo il codice della risposta http a 404 (file not found)
+    public static function write404() 
+    {
         header('HTTP/1.0 404 Not Found');
-        $titolo = "File non trovato!";
-        $messaggio = "La pagina che hai richiesto non &egrave; disponibile";
+        $title = "File non trovato!";
+        $message = "La pagina che hai richiesto non &egrave; disponibile";
         include_once('error.php');
         exit();
     }
 
     /**
-     * Crea una pagina di errore quando l'utente non ha i privilegi 
-     * per accedere alla pagina
+     * Mostra un errore quando l'utente non ha i privilegi 
+     * per accedere alla data pagina
      */
-    public static function write403() {
-        // impostiamo il codice della risposta http a 404 (file not found)
+    public static function write403() 
+    {
         header('HTTP/1.0 403 Forbidden');
-        $titolo = "Accesso negato";
-        $messaggio = "Non hai i diritti per accedere a questa pagina";
-        $login = true;
-        include_once('error.php');
+
+        $viewDescriptor = new ViewDescriptor();
+        
+        $viewDescriptor->setTitle("Accesso negato");
+        $viewDescriptor->setLogoutFile(basename(__DIR__) . '/../view/guest/logout.php');
+        $viewDescriptor->setTabsFile(basename(__DIR__) . '/../view/guest/tabs.php');
+        $viewDescriptor->setLeftSidebarFile(basename(__DIR__) . '/../view/guest/leftSidebar.php');
+        $viewDescriptor->setRightSidebarFile(basename(__DIR__) . '/../view/guest/rightSidebar.php');
+        $viewDescriptor->setContentFile(basename(__DIR__) .  '/../view/guest/content.php');
+        
+        $viewDescriptor->setErrorMessage("Accesso negato!");
+         
+        require basename(__DIR__) . '/../view/masterPage.php';
+        
         exit();
     }
 

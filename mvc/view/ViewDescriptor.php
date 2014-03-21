@@ -1,315 +1,350 @@
 <?php
 
-/**
- * Struttura dati per popolare la vista generica master.php
- *
- * @author amm
+/*
+ * Classe utilizzata dalla master page per creare le varie parti della pagina.
  */
-class ViewDescriptor {
-    /**
-     * GET http
-     */
-
-    const get = 'get';
-    /**
-     * Post HTTP
-     */
-    const post = 'post';
-
-    /**
-     * Titolo della finestra del browser
-     * @var string
-     */
-    private $titolo;
-
-    /**
-     * File che include la definizione HTML del logo (parte dello header)
-     * @var string 
-     */
-    private $navBar_file;
-
-    /**
-     * File che include la definizione HTML dei tab della pagina (parte dello header)
-     * @var string 
-     */
-    private $header_file;
-
-    /**
-     * File che include la definizione HTML della sidebar sinistra
-     * @var string 
-     */
-    private $leftBar_file;
-
-    /**
-     * File che include la definizione HTML della sidebar destra
-     * @var string 
-     */
-    private $rightBar_file;
-
-    /**
-     * File che include la definizione HTML del contenuto principale
-     * @var string 
-     */
-    private $content_file;
-
-    /**
-     * Messaggio di errore da mostrare dopo un input (nascosto se nullo)
-     * @var string 
-     */
-    private $messaggioErrore;
-
-    /**
-     * Messaggio di conferma da mostrare dopo un input (nascosto se nullo)
-     * @var string 
-     */
-    private $messaggioConferma;
+class ViewDescriptor 
+{
+    const get = 'get'; //GET http
+    
+    const post = 'post'; //Post http
     
     /**
-     * Pagina della vista corrente 
-     * (le funzionalita' sono divise in tre categorie: 
-     * amministratore, studente e docente, corrispondenti alle sottocartelle 
-     * di view nel progetto)
-     * @var string 
+     * Il titolo della pagina
+     * 
+     * @var String 
      */
-    private $pagina;
-    /**
-     * Sottopagina della vista corrente (una per funzionalita' da supportare)
-     * (le funzionalita' sono divise in tre categorie: 
-     * amministratore, studente e docente, corrispondenti alle sottocartelle 
-     * di view nel progetto)
-     * @var string 
-     */
-    private $sottoPagina;
-    /**
-     * Variabile utilizzata in modalita' amministratore per impersonare 
-     * degli utenti (vedere metodo setImpToken)
-     * @var string 
-     */
-    private $impToken;
-    
-    private $scripts;
-    
-    /**
-     * Costruttore
-     */
-    public function __construct() {
-        ;
-    }
-    
-    public function setScripts($scripts) {
-        $this->scripts = $scripts;
-    }
-    
-    public function getScripts() {
-        return $this->scripts;
-    }
+    private $title; 
 
     /**
-     * Restituisce il titolo della scheda del browser
-     * @return string
+     * Iil path per il file contenente il codice html delle tabs
+     * 
+     * @var String 
      */
-    public function getTitolo() {
-        return $this->titolo;
-    }
+    private $tabs_file; 
+    
+    /**
+     * Il path per il file contenente il codice html della sidebar sinistra
+     * 
+     * @var String 
+     */
+    private $leftSidebar_file; 
 
     /**
-     * Imposta il titolo della scheda del browser
-     * @param string $titolo il titolo della scheda del browser
+     * Il path per il file contenente il codice html della sidebar destra
+     * 
+     * @var String 
      */
-    public function setTitolo($titolo) {
-        $this->titolo = $titolo;
-    }
+    private $rightSidebar_file; 
+ 
+    /**
+     * Il path per il file contenente il codice html del content
+     * 
+     * @var String 
+     */
+    private $content_file; 
 
     /**
-     * Imposta il file che include la definizione HTML del logo (parte dello header)
-     * @param $logoFile il path al file contentente il logo
+     * Il path per il file contenente il codice html per il logout
+     * 
+     * @var String 
      */
-    public function setNavBarFile($navBarFile) {
-        $this->navBar_file = $navBarFile;
-    }
+    private $logout_file; 
+    
+    
+    /**
+     * Messaggio di errore da mostrare dopo ad esempio un input scorretto
+     * 
+     * @var String 
+     */
+    private $errorMessagge; 
 
     /**
-     * Restituisce il path al file include la definizione HTML del logo (parte dello header)
-     * @return string
+     * Messaggio di errore da conferma dopo ad esempio un input corretto
+     * 
+     * @var String 
      */
-    public function getNavBarFile() {
-        return $this->navBar_file;
+    private $confirmationMessage; 
+    
+    /**
+     * La pagina corrente
+     * 
+     * @var String 
+     */
+    private $page; 
+    
+    /**
+     * Sottopagina della vista corrente
+     * 
+     * @var String 
+     */
+    private $subPage; 
+    
+    /**
+     * Token usato dall'admin per impersonare un cliente
+     * 
+     * @var String 
+     */
+    private $impersonificationToken; 
+
+    
+    //Costruttore
+    public function __construct() 
+    {
+        
+    }
+    
+    // =====================================================
+    // Getter
+    // =====================================================
+
+    /**
+     * Restituisce il titolo della pagina
+     * @return String
+     */
+    public function getTitle() 
+    {
+        return $this->title;
+    }
+    
+    /**
+     * Restituisce il path al file che include la definizione HTML del link per il logout
+     * @return String
+     */
+    public function getLogoutFIle() 
+    {
+        return $this->logout_file;
     }
 
     /**
      * Restituisce il path al file che include la definizione HTML dei tab (parte dello header)
-     * @return string
+     * @return String
      */
-    public function getHeaderFile() {
-        return $this->header_file;
-    }
-
-    /**
-     * Imposta il path al file che include la definizione HTML dei tab (parte dello header)
-     * @param string $menuFile il path al file contenente il menu
-     */
-    public function setHeaderFile($headerFile) {
-        $this->header_file = $headerFile;
-    }
-
-    /**
-     * Restituisce il path al file che include la definizione HTML della sidebar sinistra
-     * @return string
-     */
-    public function getLeftBarFile() {
-        return $this->leftBar_file;
-    }
-
-    /**
-     * Imposta il path al file che include la definizione HTML della sidebar sinistra
-     * @param type $leftBar
-     */
-    public function setLeftBarFile($leftBar) {
-        $this->leftBar_file = $leftBar;
-    }
-
-    /**
-     * Imposta il file che include la definizione HTML della sidebar destra
-     * @return string
-     */
-    public function getRightBarFile() {
-        return $this->rightBar_file;
+    public function getTabsFile() 
+    {
+        return $this->tabs_file;
     }
     
     /**
-     * Imposta il path al file che include la definizione HTML della sidebar destra
-     * @param type $rightBar
+     * Restituisce il path al file che include la definizione HTML della sidebar sinistra
+     * @return String
      */
-    public function setRightBarFile($rightBar) {
-        $this->rightBar_file = $rightBar;
+    public function getLeftSidebarFile() 
+    {
+        return $this->leftSidebar_file;
     }
-
-     /**
-     * Imposta il file che include la definizione HTML del contenuto principale
-     * @return string
-     */
-    public function setContentFile($contentFile) {
-        $this->content_file = $contentFile;
-    }
-
+    
     /**
-     * Restituisce il path al file che contiene il contenuto principale
-     * @return string
+     * Imposta il file che include la definizione HTML della sidebar destra
+     * @return String
      */
-    public function getContentFile() {
+    public function getRightSidebarFile() 
+    {
+        return $this->rightSidebar_file;
+    }
+    
+    /**
+     * Restituisce il path al file che contiene il content 
+     * @return String
+     */
+    public function getContentFile() 
+    {
         return $this->content_file;
     }
     
     /**
-     * Restituisce il testo del messaggio di errore
-     * @return string
+     * Restituisce il testo del messaggio di errore (null se non c'è un errore)
+     * @return String
      */
-    public function getMessaggioErrore() {
-        return $this->messaggioErrore;
+    public function getErrorMessage() 
+    { 
+        return $this->errorMessagge;
     }
-
-      /**
-     * Imposta un messaggio di errore
-     * @return string
-     */
-    public function setMessaggioErrore($msg) {
-        $this->messaggioErrore = $msg;
-    }
-
-    /**
-     * Restituisce il nome della sotto-pagina corrente
-     * @return string
-     */
-    public function getSottoPagina() {
-        return $this->sottoPagina;
-    }
-
-    /**
-     * Imposta il nome della sotto-pagina corrente
-     * @param string $pag
-     */
-    public function setSottoPagina($pag) {
-        $this->sottoPagina = $pag;
-    }
-
+    
     /**
      * Restituisce il contenuto del messaggio di conferma
-     * @return string
+     * @return String
      */
-    public function getMessaggioConferma() {
-        return $this->messaggioConferma;
+    public function getConfirmationMessage() 
+    {
+        return $this->confirmationMessage;
+    }
+    
+    /**
+     * Restituisce il nome della pagina corrente
+     * @return String
+     */
+    public function getPage() 
+    {
+        return $this->page;
+    }
+    
+    /**
+     * Restituisce il nome della sotto-pagina corrente
+     * @return String
+     */
+    public function getSubPage() 
+    {
+        return $this->subPage;
+    }
+    
+    
+    /**
+     * Restituisce il valore corrente del token, se esiste. Altrimenti
+     * viene ritornata una stringa vuota
+     * @return String
+     */
+    public function getImpToken() 
+    {
+        if(isset($this->impersonationToken))
+            return $this->impersonationToken;
+        else
+            return "";
+    }
+    
+    
+    // =====================================================
+    // Setter
+    // =====================================================
+    
+    
+    /**
+     * Imposta il titolo della pagina
+     * @param String
+     */
+    public function setTitle($pTitle) 
+    {
+        $this->title = $pTitle;
+    }   
+
+    /**
+     * Imposta il path al file che include la definizione HTML del link per il logout
+     * @return String
+     */
+    public function setLogoutFIle($pLogoutFile) 
+    {
+        $this->logout_file = $pLogoutFile;
+    }
+    
+    /**
+     * Imposta il path al file che include la definizione HTML delle tab (parte dello header)
+     * @param String 
+     */
+    public function setTabsFile($pTabsFile) 
+    {
+        $this->tabs_file = $pTabsFile;
     }
 
+
+    /**
+     * Imposta il path al file che include la definizione HTML della sidebar sinistra
+     * @param String 
+     */
+    public function setLeftSidebarFile($pLeftSidebar) 
+    {
+        $this->leftSidebar_file = $pLeftSidebar;
+    }
+
+    /**
+     * Imposta il path al file che include la definizione HTML della sidebar destra
+     * @param String
+     */
+    public function setRightSidebarFile($pRightBar) 
+    {
+        $this->rightSidebar_file = $pRightBar;
+    }
+
+     /**
+     * Imposta il file che include la definizione HTML del contenuto principale
+     * @param String
+     */
+    public function setContentFile($pContentFile) {
+        $this->content_file = $pContentFile;
+    }
+
+     /**
+     * Imposta un messaggio di errore
+     * @return String
+     */
+    public function setErrorMessage($pErrorMessage) {
+        $this->errorMessagge = $pErrorMessage;
+    }
+    
     /**
      * Imposta il contenuto del messaggio di conferma
      * @param string $msg
      */
-    public function setMessaggioConferma($msg) {
-        $this->messaggioConferma = $msg;
+    public function setConfirmationMessage($pConfirmationMessage) 
+    {
+        $this->confirmationMessage = $pConfirmationMessage;
     }
-
-    /**
-     * Restituisce il nome della pagina corrente
-     * @return string
-     */
-    public function getPagina() {
-        return $this->pagina;
-    }
-
+    
     /**
      * Imposta il nome della pagina corrente
-     * @param string $pagina
+     * @param String
      */
-    public function setPagina($pagina) {
-        $this->pagina = $pagina;
+    public function setPage($pPage) 
+    {
+        $this->page = $pPage;
+    }
+    
+    /**
+     * Imposta il nome della sotto-pagina corrente
+     * @param String
+     */
+    public function setSubPage($pSubPage) 
+    {
+        $this->subPage = $pSubPage;
+    }
+
+    /**
+     * Restituisce il valore corrente del token per fare in modo che
+     * un amministratore possa impersonare un cliente
+     * 
+     * @param String
+     */
+    public function setImpToken($pImpersonationToken) 
+    {
+        $this->impersonationToken = $pImpersonationToken;
     }
 
     
-    /**
-     * Restituisce il valore corrente del token per fare in modo che
-     * un amministratore possa impersonare uno studente o un docente
-     * @param string $token
-     */
-    public function setImpToken($token) {
-        $this->impToken = $token;
-    }
-
+    
+    // =====================================================
+    // Methods
+    // =====================================================
+    
     /**
      * Scrive un token per gestire quale sia l'utente che l'amministratore
      * sta impersonando per svolgere delle operazioni in sua vece. 
      * 
      * Questo metodo concentra in un solo punto il mantenimento di questa
      * informazione, che deve essere appesa per ogni get e per ogni post
-     * quando si accede all'interfaccia dello studente o del docente 
-     * in modalita' amministratore, in modo che possano essere impersonati 
-     * piu' utenti tramite diversi schede dello stesso browser
+     * degli utenti impersonati.
      * 
-     * Se avessimo inserito questa informazione in sessione, sarebbe stato 
-     * possibile gestirne solo uno. Inoltre, in caso di piu' schede aperte con 
-     * lo stesso browser, i dati sarebbero stati mescolati.
+     * @param $pre il prefisso per attaccare il parametro del token nella 
+     *             query string.
+     * @param $method metodo HTTP usato (get o post)
      * 
-     * Questo e' un esempio di gestione di variabili a livello pagina. 
-     * 
-     * @param string $pre il prefisso per attaccare il parametro del token nella 
-     * query string. Si usi '?' se il token e' il primo parametro e '&' altrimenti
-     * @param int $method metodo HTTP (get o set)
-     * @return string il valore da scrivere nella URL in caso di get o come
-     * hidden input in caso di form
+     * @return String il valore da scrivere nella URL in caso di get o come
+     *                hidden input in caso di form
      */
-    public function scriviToken($pre = '', $method = self::get) {
-        $imp = BaseController::impersonato;
-        switch ($method) {
+    public function putToken($pre = '', $method = self::get) 
+    {
+        $imp = BaseController::impersonation;
+        
+        switch($method) 
+        {
             case self::get:
-                if (isset($this->impToken)) {
-                    // nel caso della 
-                    return $pre . "$imp=$this->impToken";
-                }
+                if (isset($this->impersonationToken)) 
+                    return $pre . "$imp=$this->impersonationToken";
+
                 break;
 
             case self::post:
-                if (isset($this->impToken)) {
-                    return "<input type=\"hidden\" name=\"$imp\" value=\"$this->impToken\"/>";
-                }
+                if (isset($this->impersonationToken)) 
+                    return "<input type=\"hidden\" name=\"$imp\" value=\"$this->impersonationToken\"/>";
+                
                 break;
         }
 

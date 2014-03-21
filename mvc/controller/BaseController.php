@@ -1,325 +1,406 @@
 <?php
 
-include_once dirname(__FILE__) . '/../view/ViewDescriptor.php';
-//include_once basename(__DIR__) . '/../model/User.php';
-//include_once basename(__DIR__) . '/../model/UserFactory.php';
+include_once basename(__DIR__) . '/../view/ViewDescriptor.php';
+include_once basename(__DIR__) . '/../controller/VisitorController.php';
+include_once basename(__DIR__) . '/../model/User.php';
+include_once basename(__DIR__) . '/../model/UserFactory.php';
 
 /**
- * Controller che gestisce gli utenti non autenticati, 
- * fornendo le funzionalita' comuni anche agli altri controller
- *
- * @author Davide Spano
+ * Controller di base per tutti gli altri (che quindi lo estendono)
  */
-class BaseController {
+class BaseController 
+{ 
+    const user = 'user'; //Costante usata come riferimento per l'user nell'array di sessione
+    const impersonation = '_imp'; //Costante usata come riferimento per gli utenti impersonati
 
-    const user = 'user';
-    const impersonato = '_imp';
-
-    /**
-     * Costruttore
-     */
-    public function __construct() {
+    //Costruttore
+    public function __construct() 
+    {
         
     }
 
     /**
-     * Metodo per gestire l'input dell'utente. Le sottoclassi lo sovrascrivono
+     * Metodo per gestire l'input dell'utente. Le sottoclassi lo sovrascrivono.
+     * 
      * @param type $request la richiesta da gestire
      * @param type $session array con le variabili di sessione
      */
-    public function handleInput(&$request, &$session) {
-        // creo il descrittore della vista
-        $vd = new ViewDescriptor();
+    public function handleInput(&$request, &$session) 
+    {            
 
-
-        // imposto la pagina
-        $vd->setPagina($request['page']);
-
-        // imposto il token per impersonare un utente (nel lo stia facendo)
-        $this->setImpToken($vd, $request);
-
-        // gestion dei comandi
-        // tutte le variabili che vengono create senza essere utilizzate 
-        // direttamente in questo switch, sono quelle che vengono poi lette
-        // dalla vista, ed utilizzano le classi del modello
-
-        /*if (isset($request["cmd"])) {
-            // abbiamo ricevuto un comando
-            switch ($request["cmd"]) {
-                case 'login':
-                    $username = isset($request['user']) ? $request['user'] : '';
-                    $password = isset($request['password']) ? $request['password'] : '';
-                    //$this->login($vd, $username, $password);
-                    // questa variabile viene poi utilizzata dalla vista
-                    //if ($this->loggedIn())
-                        //$user = $_SESSION[self::user];
-                    break;
-                default : $this->showLoginPage();
-            }
-        } else {
-            if ($this->loggedIn()) {
-                //utente autenticato
-                // questa variabile viene poi utilizzata dalla vista
-                $user = $_SESSION[self::user];
-
-                $this->showHomeUtente($vd);
-            } else {
-                // utente non autenticato
-                $this->showLoginPage($vd);
-            }
-        }*/
-        
-        $this->showLoginPage($vd);
-        // richiamo la vista
-        require dirname(__FILE__) . '/../view/master.php';
     }
 
     /**
      * Restituisce l'array contentente la sessione per l'utente corrente 
      * (vero o impersonato). Le sottoclassi lo sovrascrivono
+     * 
      * @return array
      */
-    public function &getSessione() {
+    public function &getSession() 
+    {
         return $_SESSION;
     }
 
     /**
      * Verifica se l'utente sia correttamente autenticato
-     * @return boolean true se l'utente era gia' autenticato, false altrimenti
+     * 
+     * @return true se l'utente era gia' autenticato, false altrimenti
      */
-    protected function loggedIn() {
+    protected function isLoggedIn() 
+    {
         return isset($_SESSION) && array_key_exists(self::user, $_SESSION);
     }
 
-    /**
-     * Imposta la vista master.php per visualizzare la pagina di login
-     * @param ViewDescriptor $vd il descrittore della vista
-     */
-    protected function showLoginPage($vd) {
-        // mostro la pagina di login
-        $vd->setTitolo("Moodle - login");
-        $vd->setScripts(dirname(__FILE__) . '/../view/login/scripts.php');
-        $vd->setHeaderFile(dirname(__FILE__) . '/../view/login/header.php');
-        $vd->setNavBarFile(dirname(__FILE__) . '/../view/login/navbar.php');
-        $vd->setContentFile(dirname(__FILE__) . '/../view/login/content.php');
-    }
-
-    /**
-     * Imposta la vista master.php per visualizzare la pagina di gestione
-     * dello studente
-     * @param ViewDescriptor $vd il descrittore della vista
-     */
-    protected function showHomeStudente($vd) {
-        // mostro la home degli studenti
-
-        $vd->setTitolo("esAMMi - gestione studente ");
-        $vd->setMenuFile(basename(__DIR__) . '/../view/studente/menu.php');
-        $vd->setLogoFile(basename(__DIR__) . '/../view/studente/logo.php');
-        $vd->setLeftBarFile(basename(__DIR__) . '/../view/studente/leftBar.php');
-        $vd->setRightBarFile(basename(__DIR__) . '/../view/studente/rightBar.php');
-        $vd->setContentFile(basename(__DIR__) . '/../view/studente/content.php');
-    }
-
-     /**
-     * Imposta la vista master.php per visualizzare la pagina di gestione
-     * del docente
-     * @param ViewDescriptor $vd il descrittore della vista
-     */
-    protected function showHomeDocente($vd) {
-        // mostro la home dei docenti
-        $vd->setTitolo("esAMMi - gestione docente ");
-        $vd->setMenuFile(basename(__DIR__) . '/../view/docente/menu.php');
-        $vd->setLogoFile(basename(__DIR__) . '/../view/docente/logo.php');
-        $vd->setLeftBarFile(basename(__DIR__) . '/../view/docente/leftBar.php');
-        $vd->setRightBarFile(basename(__DIR__) . '/../view/docente/rightBar.php');
-        $vd->setContentFile(basename(__DIR__) . '/../view/docente/content.php');
-    }
-
     
-     /**
-     * Imposta la vista master.php per visualizzare la pagina di gestione
-     * dell'amministratore
-     * @param ViewDescriptor $vd il descrittore della vista
+    /**
+     *  Controlla a che tipo di utente corrisponde l'utente e carica
+      * la la pagina appropiata
+      * 
+     * @param ViewDescriptor $viewDescriptor
+     * @param $pSession 
      */
-    protected function showHomeAmministratore($vd) {
-        // mostro la home degli amministratori
+    protected function showPage($viewDescriptor, $pSession) 
+    {
+        //Controllo se è stato salvato un utente nella sessione...
+        if(isset($pSession[self::user]))
+        {
+            //...ed in tal caso lo recupero
+            $user = $pSession[self::user];
+                        
+            //Controllo il tipo di utente e salvo il titolo ed il path per caricare
+            //le parti della home a seconda dell'user
+            switch($user->getUserType()) 
+            {
+                case User::ADMIN:
+                    $pageTitle = 'openbook.com';
+                    $path = '/../view/admin/';
+                    break;
 
-        $vd->setTitolo("esAMMi - Super User ");
-        $vd->setMenuFile(basename(__DIR__) . '/../view/amministratore/menu.php');
-        $vd->setLogoFile(basename(__DIR__) . '/../view/amministratore/logo.php');
-        $vd->setLeftBarFile(basename(__DIR__) . '/../view/amministratore/leftBar.php');
-        $vd->setRightBarFile(basename(__DIR__) . '/../view/amministratore/rightBar.php');
-        $vd->setContentFile(basename(__DIR__) . '/../view/amministratore/content.php');
-    }
+                case User::CUSTOMER:                               
+                    $pageTitle = 'openbook.com';
+                    $path = '/../view/customer/';
+                    break;
 
-    
-     /**
-     * Seleziona quale pagina mostrare in base al ruolo dell'utente corrente
-     * @param ViewDescriptor $vd il descrittore della vista
-     */
-    protected function showHomeUtente($vd) {
-        $user = $_SESSION[self::user];
-        switch ($user->getRuolo()) {
-            case User::Studente:
-                $this->showHomeStudente($vd);
-                break;
-
-            case User::Docente:
-                $this->showHomeDocente($vd);
-                break;
-
-            case User::Amministratore:
-                $this->showHomeAmministratore($vd);
-                break;
+                case User::RETAILER:                
+                    $pageTitle = 'openbook.com';
+                    $path = '/../view/retailer/';
+                    break;
+            }
+        } 
+        //Se non è stato salvato un utente in sessione vuol dire che chi sta
+        //usando il sito non è loggato, quindi recupero il path per i file dei visitatori
+        else
+        {
+            $pageTitle = 'BelleScarpe';
+            $path = '/../view/guest/';
+        }
+        
+        //Se almeno un elemento dello switch è stato eseguito, carico la pagina
+        if(isset($path))
+        {                 
+            $viewDescriptor->setTitle($pageTitle);
+            $viewDescriptor->setLogoutFile(basename(__DIR__) . $path . 'logout.php');
+            $viewDescriptor->setTabsFile(basename(__DIR__) . $path . 'tabs.php');
+            $viewDescriptor->setLeftSidebarFile(basename(__DIR__) . $path . 'leftSidebar.php');
+            $viewDescriptor->setRightSidebarFile(basename(__DIR__) . $path . 'rightSidebar.php');
+            $viewDescriptor->setContentFile(basename(__DIR__) .  $path . 'content.php');
         }
     }
-
-    
+ 
     /**
      * Imposta la variabile del descrittore della vista legato 
      * all'utente da impersonare nel caso sia stato specificato nella richiesta
-     * @param ViewDescriptor $vd il descrittore della vista
-     * @param array $request la richiesta
+     * 
+     * @param ViewDescriptor $viewDescriptor
+     * @param array $request
      */
-    protected function setImpToken(ViewDescriptor $vd, &$request) {
-
-        if (array_key_exists('_imp', $request)) {
-            $vd->setImpToken($request['_imp']);
-        }
+    protected function setImpToken(ViewDescriptor $viewDescriptor, &$request) 
+    {
+        if(array_key_exists(self::impersonation, $request)) 
+            $viewDescriptor->setImpToken($request[self::impersonation]);
+        
     }
 
     /**
      * Procedura di autenticazione 
-     * @param ViewDescriptor $vd descrittore della vista
+     * 
+     * @param ViewDescriptor $pViewDescriptor descrittore della vista
      * @param string $username lo username specificato
      * @param string $password la password specificata
      */
-    protected function login($vd, $username, $password) {
-        // carichiamo i dati dell'utente
-
+    protected function login($pViewDescriptor, $username, $password) 
+    {
+        //Controllo i dati inseriti corrispondono ad un utente
         $user = UserFactory::loadUser($username, $password);
-        if (isset($user) && $user->esiste()) {
-            // utente autenticato
-
+        
+        //Se la variabile user è settata, procedo con il login
+        if(isset($user)) 
+        {
+            //Se l'utente esiste, lo salvo nell'array di sessione...
             $_SESSION[self::user] = $user;
-            $this->showHomeUtente($vd);
-        } else {
-            $vd->setMessaggioErrore("Utente sconosciuto o password errata");
-            $this->showLoginPage($vd);
+            
+            //...segno che la pagina che si visualizzerà è la home dell'utente...
+            $pViewDescriptor->setSubpage('home');
+            
+            //...e carico quindi le parti della pagina
+            $this->showPage($pViewDescriptor, $_SESSION);
+        } 
+        //Altrimenti inserisco un errore da far apparire nella pagina di login e la ricarico
+        else 
+        {
+            $pViewDescriptor->setErrorMessage("Utente sconosciuto o password errata");
+            $this->showPage($pViewDescriptor, $_SESSION);
         }
     }
 
     /**
      * Procedura di logout dal sistema 
-     * @param type $vd il descrittore della pagina
+     * 
+     * @param type $viewDescriptor il descrittore della pagina
      */
-    protected function logout($vd) {
-        // reset array $_SESSION
+    protected function logout($viewDescriptor) 
+    {
+        //Azzero l'array di sessione
         $_SESSION = array();
-        // termino la validita' del cookie di sessione
+        
+        //Termino la validita' del cookie di sessione
         if (session_id() != '' || isset($_COOKIE[session_name()])) {
-            // imposto il termine di validita' al mese scorso
+            //Imposto il termine di validita' al mese scorso
             setcookie(session_name(), '', time() - 2592000, '/');
         }
-        // distruggo il file di sessione
+           
+        //Distruggo il file di sessione
         session_destroy();
-        $this->showLoginPage($vd);
-    }
-
-    /**
-     * Aggiorno l'indirizzo di un utente (comune a Studente e Docente)
-     * @param User $user l'utente da aggiornare
-     * @param array $request la richiesta http da gestire
-     * @param array $msg riferimento ad un array da riempire con eventuali
-     * messaggi d'errore
-     */
-    protected function aggiornaIndirizzo($user, &$request, &$msg) {
-
-        if (isset($request['via'])) {
-            if (!$user->setVia($request['via'])) {
-                $msg[] = '<li>La via specificata non &egrave; corretta</li>';
-            }
-        }
-        if (isset($request['civico'])) {
-            if (!$user->setNumeroCivico($request['civico'])) {
-                $msg[] = '<li>Il formato del numero civico non &egrave; corretto</li>';
-            }
-        }
-        if (isset($request['citta'])) {
-            if (!$user->setCitta($request['citta'])) {
-                $msg[] = '<li>La citt&agrave; specificata non &egrave; corretta</li>';
-            }
-        }
-        if (isset($request['provincia'])) {
-            if (!$user->setProvincia($request['provincia'])) {
-                $msg[] = '<li>La provincia specificata &egrave; corretta</li>';
-            }
-        }
-        if (isset($request['cap'])) {
-            if (!$user->setCap($request['cap'])) {
-                $msg[] = '<li>Il CAP specificato non &egrave; corretto</li>';
-            }
-        }
-    }
-
-    /**
-     * Aggiorno l'indirizzo email di un utente (comune a Studente e Docente)
-     * @param User $user l'utente da aggiornare
-     * @param array $request la richiesta http da gestire
-     * @param array $msg riferimento ad un array da riempire con eventuali
-     * messaggi d'errore
-     */
-    protected function aggiornaEmail($user, &$request, &$msg) {
-        if (isset($request['email'])) {
-            if (!$user->setEmail($request['email'])) {
-                $msg[] = '<li>L\'indirizzo email specificato non &egrave; corretto</li>';
-            }
-        }
+        
+        //Adesso carico la pagina della home dei visitatori
+        $this->showPage($viewDescriptor, $_SESSION);
+        
+        require basename(__DIR__) . '/../view/masterPage.php';
     }
     
+
     
     /**
-     * Aggiorno la password di un utente (comune a Studente e Docente)
+     * Metodo per calcolare il range di elementi da visualizzare nella sottopagina
+     * corrente; serve in pagine come il catalogo che mostrano i risultati
+     * pochi per volta, permettendo di visualizzarne altri scorrendo le
+     * sottopagine. 
+     * 
+     * @param $pNumberOfSubpages il numero di sottopagine totali
+     * @param $pNumberOfRows il numero effettivo di elementi da visualizzare
+     * @param $request l'array delle richieste per recuperare il numero della sottopagina corrente
+     * 
+     * @return l'indice da cui far partire la ricerca nel database
+     */
+    protected function calculateSubpageNumberRange($pNumberOfSubpages, $pNumberOfRows, $request) 
+    {
+        //Controllo a che pagina l'utente è attualmente recuperandola
+        //dall'array richieste
+        if(isset($request["subpageNumber"])) 
+        {
+            //Controllo che il valore inserito sia effettivamente un numero
+            $currentSubpageNumber = filter_var($request["subpageNumber"], FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
+            
+            //Se il valore è un numero compreso tra 1 ed il numero di pagine del catalogo posso proseguire
+            if(isset($currentSubpageNumber) && $currentSubpageNumber > 1 && $currentSubpageNumber <= $pNumberOfSubpages)
+            {      
+                /* Devo calcolare quali serie di 5 libri devo recuperare; per farlo
+                 * considero la pagina corrente meno 1 (dato che nel database gli elementi
+                 * sono salvati partendo da 0) moltiplicata per 5: il risultato sarà
+                 * l'indice da cui il database deve partire per recuperare i libri */
+                $startingIndex = ($currentSubpageNumber-1) * $pNumberOfRows;
+            }
+            //Se il valore non è un numero, riporto semplicemente alla prima pagina segnalando
+            //che dovranno essere presi i libri del catalogo partendo dall'indice 0
+            else
+                $startingIndex = 0;
+        }
+        //Se non è specificata la sottopagina, do' per scontato che sia la prima,
+        //quindi segno che l'indice da cui iniziare la ricerca nel database è 0
+        else
+            $startingIndex = 0;
+        
+        return $startingIndex;
+    }
+
+    
+    /**
+     * Controlla se sono state trovati dei match nella ricerca semplice
+     * di un libro.
+     * 
+     * @param $viewDescriptor descrittore della vista, per mostrare errori
+     * @param array $request la richiesta contenente il nome del libro
+     * 
+     * @return il numero di occorrenze o -1 in caso di problemi
+     */
+    protected function searchOccurencesOfBookByName($request, $viewDescriptor)
+    {        
+        if(isset($request["searchBar"]) && $request["searchBar"] != "")
+        {
+            //Se non ci sono stati problemi con l'input inserito nella barra di 
+            //ricerca, lo recupero e controllo con l'appposito metodo il numero di occorrenze
+            $bookName = $request["searchBar"];
+                        
+            $occurences = BookFactory::countOccurencesByName($bookName);
+          
+            return $occurences;
+        }
+        else
+        {
+            $viewDescriptor->setErrorMessage("Inserire il nome del libro da cercare!");
+        
+            return -1; 
+        }   
+    }
+
+    
+    /**
+     * Controlla se sono state trovati dei match nella ricerca avanzata
+     * di un libro.
+     * 
+     * @param $viewDescriptor descrittore della vista, per mostrare errori
+     * @param array $request la richiesta contenente il nome del libro
+     * @param array $searchParams in cui inserire i parametri inseriti dall'utente
+     * 
+     * @return il numero di occorrenze o -1 in caso di problemi
+     */
+    protected function searchOccurencesOfAdvancedSearch($request, $viewDescriptor, &$searchParams)
+    {         
+        $searchParams['genre'] = $request["genre"];
+        $searchParams['bookName'] = htmlentities($request["bookName"]);
+        $searchParams['author'] = htmlentities($request["author"]);
+        $searchParams['publisher'] = htmlentities($request["publisher"]);
+        $searchParams['year'] = $request["year"];
+
+        if($searchParams['genre'] == -1)
+            $searchParams['genre'] = null;
+
+        if($searchParams['year'] == "")
+            $searchParams['year'] = null;
+
+
+        $occurences = BookFactory::countOccurencesOfAdvancedSearch($searchParams['bookName'], $searchParams['author'], $searchParams['publisher'],
+                                                                   $searchParams['year'], $searchParams['genre']);
+        
+        return $occurences;
+    }  
+    
+    /**
+     * Aggiorna i dati personali di un utente.
+     * 
      * @param User $user l'utente da aggiornare
      * @param array $request la richiesta http da gestire
-     * @param array $msg riferimento ad un array da riempire con eventuali
-     * messaggi d'errore
+     * 
+     * @return boolean, true in caso di successo; false altrimenti
      */
-    protected function aggiornaPassword($user, &$request, &$msg) {
-        if (isset($request['pass1']) && isset($request['pass2'])) {
-            if ($request['pass1'] == $request['pass2']) {
-                if (!$user->setPassword($request['pass1'])) {
-                    $msg[] = '<li>Il formato della password non &egrave; corretto</li>';
+    protected function changePersonalData(&$user, &$request, ViewDescriptor $viewDescriptor) 
+    {
+        $hasSucceeded = false;
+        
+        //Per ogni campo del form, controllo se è vuoto e se è plausibile
+        if(isset($request['email']) && $request['email'] != "") 
+        {
+            if(!$user->setEmail(html_entity_decode($request['email'])))
+                $viewDescriptor->setErrorMessage("L'email inserita non è valida.");
+            else
+            {
+                if(isset($request['adress']) && $request['adress'] != "") 
+                {       
+                    if(!$user->setAdress(html_entity_decode($request['adress'])))
+                        $viewDescriptor->setErrorMessage("L'indirizzo inserito non è valido.");
+                    else
+                    {
+                        if(isset($request['civicNumber']) && $request['civicNumber'] != "") 
+                        {       
+                            if(!$user->setCivicNumber($request['civicNumber']))
+                                $viewDescriptor->setErrorMessage("Il numero civico inserito non è valido.");
+                            else
+                            {
+                                if(isset($request['city']) && $request['city'] != "") 
+                                {       
+                                    if(!$user->setCity(html_entity_decode($request['city'])))
+                                        $viewDescriptor->setErrorMessage("La città inserita non è valida.");
+                                    else
+                                    {
+                                        if(isset($request['cap']) && $request['cap'] != "") 
+                                        {       
+                                            if(!$user->setCap($request['cap']))
+                                                $viewDescriptor->setErrorMessage("Il cap inserito non è valido.");
+                                            else
+                                            {
+                                                if(isset($request['company']) && $request['company'] != "")
+                                                {
+                                                    if($user->setCompany(html_entity_decode($request['company'])))
+                                                        $hasSucceeded = true;
+                                                    else
+                                                        $viewDescriptor->setErrorMessage("Inserire il nome della compagnia.");
+                                                }
+                                                //Se a modificare i dati è un cliente, la compagnia non c'è; quindi se non esiste
+                                                //quel campo, si può procedere lo stesso
+                                                else if(!isset($request['company']))
+                                                    $hasSucceeded = true;   
+                                            } 
+                                        }
+                                        else
+                                            $viewDescriptor->setErrorMessage("Il campo cap è vuoto.");
+                                    }
+                                }
+                                else
+                                    $viewDescriptor->setErrorMessage("Il campo città è vuoto.");
+                            }
+                        }
+                        else
+                            $viewDescriptor->setErrorMessage("Il campo del numero civico è vuoto.");
+                    }
                 }
-            } else {
-                $msg[] = '<li>Le due password non coincidono</li>';
+                else
+                    $viewDescriptor->setErrorMessage("Il campo del'indirizzo è vuoto.");
             }
         }
+        else
+            $viewDescriptor->setErrorMessage("Il campo dell'email è vuoto.");
+        
+        
+        return $hasSucceeded;
     }
 
     /**
-     * Crea un messaggio di feedback per l'utente 
-     * @param array $msg lista di messaggi di errore
-     * @param ViewDescriptor $vd il descrittore della pagina
-     * @param string $okMsg il messaggio da mostrare nel caso non ci siano errori
+     * Aggiorna la password di un utente.
+     * 
+     * @param User $user l'utente in questione
+     * @param array $request la richiesta http da gestire
+     * @param ViewDescriptor $viewDescriptor descrittore della vista, per mostrare errori
      */
-    protected function creaFeedbackUtente(&$msg, $vd, $okMsg) {
-        if (count($msg) > 0) {
-            // ci sono messaggi di errore nell'array,
-            // qualcosa e' andato storto...
-            $error = "Si sono verificati i seguenti errori \n<ul>\n";
-            foreach ($msg as $m) {
-                $error = $error . $m . "\n";
+    protected function changePassword(&$user, &$request, ViewDescriptor $viewDescriptor) 
+    {
+        $hasSucceeded = false;
+        
+        if(isset($request['password']) && $request['password'] != "") 
+        {
+            $password = $request['password'];
+            
+            if(isset($request['password2']) && $request['password2'] != "") 
+            {   
+                $password2 = $request['password2'];
+                
+                if($password == $password2)
+                {
+                    $user->setPassword($password);
+                    
+                    $hasSucceeded = true;
+                }
+                else
+                    $viewDescriptor->setErrorMessage ("La conferma della password non è corretta.");
             }
-            // imposto il messaggio di errore
-            $vd->setMessaggioErrore($error);
-        } else {
-            // non ci sono messaggi di errore, la procedura e' andata
-            // quindi a buon fine, mostro un messaggio di conferma
-            $vd->setMessaggioConferma($okMsg);
+            else
+                $viewDescriptor->setErrorMessage ("Il campo per la conferma della password è vuoto."); 
         }
+        else
+            $viewDescriptor->setErrorMessage ("Il campo per la la password è vuoto.");
+        
+        
+        return $hasSucceeded;
     }
-
 }
 
 ?>
