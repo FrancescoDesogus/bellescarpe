@@ -31,7 +31,7 @@ class ShoeFactory
                 
                 $mysqli->close();
                 
-                return getShoeFromRow($row, $shoeId);
+                return ShoeFactory::getShoeFromRow($row, $shoeId);
             }
             else
             {
@@ -42,8 +42,8 @@ class ShoeFactory
         }
         else
             return null;
-    }
-    
+    }   
+
     /**
      * Metodo di convenienza che estrapola i dati da una riga del database
      * per creare il libro che ne risulta
@@ -52,28 +52,102 @@ class ShoeFactory
      * 
      * @return la scarpa recuparata
      */
-    private function getShoeFromRow($row, $shoeId) 
+    private static function getShoeFromRow($row, $shoeId) 
     {
         $id = $row->id_scarpa;
         $brand = $row->marca;
         $model = $row->modello;
         $color = $row->colore;
         $sex=  $row->sesso;
-        $price = $row->publisher;
+        $price = $row->prezzo;
         
-//        $category = $row->genre;
-//        
-//        $sizesAndQuantities = $row->briefDescription;
+        $category = ShoeFactory::getCategoriesFromId($shoeId);
         
-        $category = "lol";
-        $sizesAndQuantities = "aaaaaaaaaa";
+        $sizesAndQuantities = ShoeFactory::getSizesAndQuantitiesFromId($shoeId);
         
-        $price = $row->mediaPath;
+        $mediaPath = $row->media;
 
         //Creo quindi il libro con i parametri appena presi...
-        $shoe = new Shoe($id, $brand, $model, $color, $sex, $price, $category, $$sizesAndQuantities, $mediaPath);
+        $shoe = new Shoe($id, $brand, $model, $color, $sex, $price, $category, $sizesAndQuantities, $mediaPath);
         
         return $shoe;
+    }
+    
+    
+    public static function getCategoriesFromId($shoeId) 
+    {
+        //Effettuo la connessione al database
+        $mysqli = Database::connect();
+        
+        $categories = array();
+        
+        //Se la variabile è settata non ci sono stati errori
+        if(isset($mysqli))
+        {            
+            $query = "SELECT categoria FROM Categoria WHERE id_scarpa = $shoeId";
+
+            $result = $mysqli->query($query);
+            
+
+            //Se non ci sono stati errori ed il catalogo ha almeno 1 elemento, procedo
+            if(Database::checkForErrors($mysqli) && $result->num_rows > 0)
+            {
+                //Per ogni riga, recupero i vari campi delle colonne
+                while($row = $result->fetch_object())
+                {      
+                    //Recupero il libro dalla riga...
+                    $category = $row->categoria;
+                       
+                    //...e lo aggiungo all'array
+                    $categories[] = $category;
+                }
+            }
+            
+            //Finito di usare il database, lo chiudo
+            $mysqli->close();
+            
+            return $categories;
+        }
+        else
+            return $categories;
+    }
+    
+    
+    public static function getSizesAndQuantitiesFromId($shoeId) 
+    {
+        //Effettuo la connessione al database
+        $mysqli = Database::connect();
+        
+        $sizesAndQuantities = array();
+        
+        //Se la variabile è settata non ci sono stati errori
+        if(isset($mysqli))
+        {            
+            $query = "SELECT taglia, quantita FROM Taglia WHERE id_scarpa = $shoeId";
+
+            $result = $mysqli->query($query);
+            
+
+            //Se non ci sono stati errori ed il catalogo ha almeno 1 elemento, procedo
+            if(Database::checkForErrors($mysqli) && $result->num_rows > 0)
+            {
+                //Per ogni riga, recupero i vari campi delle colonne
+                while($row = $result->fetch_object())
+                {      
+                    $size = $row->taglia;
+                    $quantity = $row->quantita;
+                       
+                    $sizesAndQuantities[$size] = $quantity;
+                }
+            }
+            
+            //Finito di usare il database, lo chiudo
+            $mysqli->close();
+            
+            return $sizesAndQuantities;
+        }
+        else
+            return $sizesAndQuantities;
     }
 }
 

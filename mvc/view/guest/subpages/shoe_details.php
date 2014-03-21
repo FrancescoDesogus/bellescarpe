@@ -1,8 +1,77 @@
      <!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
      
      <?php
+     
+     echo "Dati della scarpa con id pari a 1: <br> <br>";
+     
+     
+     //Stampo tutti i dati della scarpa con id = 1
+     echo "ID = ";
+     echo $shoe->getId();
+     echo "<br>";
+     
+     echo "Marca = ";
      echo $shoe->getBrand();
-     echo "aaaaaaa";
+     echo "<br>";
+     
+     echo "Modello = ";
+     echo $shoe->getModel();
+     echo "<br>";
+     
+     echo "Colore = ";
+     echo $shoe->getColor();
+     echo "<br>";
+     
+     echo "Sesso = ";
+     echo $shoe->getSex();
+     echo "<br>";
+     
+     echo "Prezzo = ";
+     echo $shoe->getPrice()." euro";
+     echo "<br>";
+     
+     
+     //Stampo tutte le categorie della scarpa; potrebbero essere più di una
+     $i = 0;
+     
+     $categories = $shoe->getCategories();
+     
+     for($i = 0; $i < count($categories); $i++) 
+     {
+        echo "Categoria".($i + 1)." = ";
+        echo $categories[$i];
+        echo "<br>";
+     }
+     
+     echo "<br>";
+     
+     
+     //Stampo tutte le taglie presenti del modello, con relativa quantità disponibile per la data misura
+     $sizesAndQuantities = $shoe->getSizesAndQuantities();
+     
+     foreach ($sizesAndQuantities as $size => $quantity) 
+     {
+        echo "Taglia".$size." => Quntita': ".$quantity;
+        echo "<br>";
+     }
+     
+     echo "<br>";
+     
+     
+     //Stampo il path dei media della scarpa; di default è null
+     $mediaPath = $shoe->getMediaPath();
+     
+     echo "MediaPath = ";
+     
+     if(isset($mediaPath))
+         echo "not null";
+     else
+         echo "null";
+     
+     echo "<br>";
+     echo "<br>";
+     echo "<br>";
+     
      ?>
      
       <div id="blueimp-gallery" class="blueimp-gallery">

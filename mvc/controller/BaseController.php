@@ -1,9 +1,8 @@
 <?php
 
 include_once basename(__DIR__) . '/../view/ViewDescriptor.php';
-include_once basename(__DIR__) . '/../controller/VisitorController.php';
-include_once basename(__DIR__) . '/../model/User.php';
-include_once basename(__DIR__) . '/../model/UserFactory.php';
+//include_once basename(__DIR__) . '/../model/User.php';
+//include_once basename(__DIR__) . '/../model/UserFactory.php';
 
 /**
  * Controller di base per tutti gli altri (che quindi lo estendono)

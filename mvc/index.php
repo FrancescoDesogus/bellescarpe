@@ -46,50 +46,51 @@ class FrontController
                     $controller->handleInput($request, $_SESSION);
                     break;
 
-                case 'admin':
-                    //Se la pagina è della categoria admin, creo il controller
-                    //per gli admin che si occupa di controllare gli input
-                    $controller = new AdminController();
-                                       
-                    $session = &$controller->getSession();
-                    
-                    if(!isset($session)) 
-                        self::write403();
-                    
-                    $controller->handleInput($request, $session);
-                    break;
-
-                case 'customer':
-                    //Se la pagina è della categoria customer, creo il controller
-                    //per i clienti che si occupa di controllare gli input
-                    $controller = new CustomerController();
-    
-                    $session = &$controller->getSession($request);
-                    
-                    if(!isset($session)) 
-                        self::write403();
-                    
-                    $controller->handleInput($request, $session);
-                    break;
-
-                case 'retailer':
-                    //Se la pagina è della categoria retailer, creo il controller
-                    //per i commercianti che si occupa di controllare gli input
-                    $controller = new RetailerController();
-                    
-                    $session = &$controller->getSession($request);
-  
-                    if(!isset($session)) 
-                        self::write403();
-                    
-                    $controller->handleInput($request, $session);
-                    break;
+//                case 'admin':
+//                    //Se la pagina è della categoria admin, creo il controller
+//                    //per gli admin che si occupa di controllare gli input
+//                    $controller = new AdminController();
+//                                       
+//                    $session = &$controller->getSession();
+//                    
+//                    if(!isset($session)) 
+//                        self::write403();
+//                    
+//                    $controller->handleInput($request, $session);
+//                    break;
+//
+//                case 'customer':
+//                    //Se la pagina è della categoria customer, creo il controller
+//                    //per i clienti che si occupa di controllare gli input
+//                    $controller = new CustomerController();
+//    
+//                    $session = &$controller->getSession($request);
+//                    
+//                    if(!isset($session)) 
+//                        self::write403();
+//                    
+//                    $controller->handleInput($request, $session);
+//                    break;
+//
+//                case 'retailer':
+//                    //Se la pagina è della categoria retailer, creo il controller
+//                    //per i commercianti che si occupa di controllare gli input
+//                    $controller = new RetailerController();
+//                    
+//                    $session = &$controller->getSession($request);
+//  
+//                    if(!isset($session)) 
+//                        self::write403();
+//                    
+//                    $controller->handleInput($request, $session);
+//                    break;
 
                 default:
                     self::write404();
                     break;                    
             }
-        } else {
+        } else 
+        {
             self::write404();
         }
     }

@@ -22,7 +22,10 @@ class Database
     {
         $mysqli = new mysqli();
         
-        $mysqli->connect(self::$DB_HOST, self::$DB_USER, self::$DB_PASSWORD, self::$DB_NAME);
+        if($_SERVER['HTTP_HOST'] != 'localhost')
+            $mysqli->connect(self::$DB_HOST, self::$DB_USER, self::$DB_PASSWORD, self::$DB_NAME);
+        else
+            $mysqli->connect(self::$DB_HOST, "root", "", self::$DB_NAME);
     
         if($mysqli->connect_errno != 0)
         {

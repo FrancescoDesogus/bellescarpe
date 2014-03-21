@@ -36,9 +36,9 @@ class Shoe {
     private $price;
     
     /**
-     * Tipo di scarpa
+     * Le categorie a cui la scarpa appartiene (array)
      */
-    private $category;
+    private $categories;
     
     
     /*
@@ -55,7 +55,7 @@ class Shoe {
     /**
      * Costrutture dell'appello
      */
-    public function __construct($id, $brand, $model, $color, $sex, $price, $category, $sizesAndQuantities, $mediaPath) 
+    public function __construct($id, $brand, $model, $color, $sex, $price, $categories, $sizesAndQuantities, $mediaPath) 
     {
         $this->setId($id);
         $this->setBrand($brand);
@@ -63,8 +63,8 @@ class Shoe {
         $this->setColor($color);
         $this->setSex($sex);
         $this->setPrice($price);
-        $this->setCategory($category);
-        $this->setSizes($sizesAndQuantities);
+        $this->setCategories($categories);
+        $this->setSizesAndQuantities($sizesAndQuantities);
         $this->setMediaPath($mediaPath);
     }
 
@@ -122,11 +122,11 @@ class Shoe {
      * 
      * @return array
      */
-    public function &getSizes() {
+    public function getSizesAndQuantities() {
         return $this->sizesAndQuantities;
     }
     
-    public function setSizes($taglie){
+    public function setSizesAndQuantities($taglie){
         $this->sizesAndQuantities = $taglie;
     }
     
@@ -181,12 +181,12 @@ class Shoe {
         $this->color = $colore;
     }
     
-    public function getCategory(){
-        return $this->category;
+    public function getCategories(){
+        return $this->categories;
     }
     
-    public function setCategory($categoria){
-        $this->category = $categoria;
+    public function setCategories($categoria){
+        $this->categories = $categoria;
     }
 
      public function getMediaPath(){
