@@ -39,6 +39,8 @@ class BaseController
     {
         return $_SESSION;
     }
+    
+    
 
     /**
      * Verifica se l'utente sia correttamente autenticato
