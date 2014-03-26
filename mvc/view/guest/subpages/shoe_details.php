@@ -13,137 +13,213 @@
 //     
 //     echo '<img src="'.$filename.'" /><hr/>';
      
-     
-     
-     
-     echo "Dati della scarpa con id pari a 1: <br> <br>";
-     
-     if($shoe == null)
-     {
-        echo "Non ci sono scarpe... coddasa?";
-        
-     }
-     else {
-
-        //Stampo tutti i dati della scarpa con id = 1
-        echo "ID = ";
-        echo $shoe->getId();
-        echo "<br>";
-
-        echo "Marca = ";
-        echo $shoe->getBrand();
-        echo "<br>";
-
-        echo "Modello = ";
-        echo $shoe->getModel();
-        echo "<br>";
-
-        echo "Colore = ";
-        echo $shoe->getColor();
-        echo "<br>";
-
-        echo "Sesso = ";
-        echo $shoe->getSex();
-        echo "<br>";
-
-        echo "Prezzo = ";
-        echo $shoe->getPrice()." euro";
-        echo "<br>";
-
-
-        //Stampo tutte le categorie della scarpa; potrebbero essere più di una
-        $i = 0;
-
-        $categories = $shoe->getCategories();
-
-        for($i = 0; $i < count($categories); $i++) 
-        {
-           echo "Categoria".($i + 1)." = ";
-           echo $categories[$i];
-           echo "<br>";
-        }
-
-        echo "<br>";
-
-
-        //Stampo tutte le taglie presenti del modello, con relativa quantità disponibile per la data misura
-        $sizesAndQuantities = $shoe->getSizesAndQuantities();
-
-        foreach ($sizesAndQuantities as $size => $quantity) 
-        {
-           echo "Taglia".$size." => Quntita': ".$quantity;
-           echo "<br>";
-        }
-
-        echo "<br>";
-
-
-        //Stampo il path dei media della scarpa; di default è null
-        $mediaPath = $shoe->getMediaPath();
-
-        echo "MediaPath = ";
-
-        if(isset($mediaPath))
-            echo "not null";
-        else
-            echo "null";
-
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-        
-        
-        
-     }
-     
+//     
+//     
+//     
+//     echo "Dati della scarpa con id pari a 1: <br> <br>";
+//     
+//     if($shoe == null)
+//     {
+//        echo "Non ci sono scarpe... coddasa?";
+//        
+//     }
+//     else {
+//
+//        //Stampo tutti i dati della scarpa con id = 1
+//        echo "ID = ";
+//        echo $shoe->getId();
+//        echo "<br>";
+//
+//        echo "Marca = ";
+//        echo $shoe->getBrand();
+//        echo "<br>";
+//
+//        echo "Modello = ";
+//        echo $shoe->getModel();
+//        echo "<br>";
+//
+//        echo "Colore = ";
+//        echo $shoe->getColor();
+//        echo "<br>";
+//
+//        echo "Sesso = ";
+//        echo $shoe->getSex();
+//        echo "<br>";
+//
+//        echo "Prezzo = ";
+//        echo $shoe->getPrice()." euro";
+//        echo "<br>";
+//
+//
+//        //Stampo tutte le categorie della scarpa; potrebbero essere più di una
+//        $i = 0;
+//
+//        $categories = $shoe->getCategories();
+//
+//        for($i = 0; $i < count($categories); $i++) 
+//        {
+//           echo "Categoria".($i + 1)." = ";
+//           echo $categories[$i];
+//           echo "<br>";
+//        }
+//
+//        echo "<br>";
+//
+//
+//        //Stampo tutte le taglie presenti del modello, con relativa quantità disponibile per la data misura
+//        $sizesAndQuantities = $shoe->getSizesAndQuantities();
+//
+//        foreach ($sizesAndQuantities as $size => $quantity) 
+//        {
+//           echo "Taglia".$size." => Quntita': ".$quantity;
+//           echo "<br>";
+//        }
+//
+//        echo "<br>";
+//
+//
+//        //Stampo il path dei media della scarpa; di default è null
+//        $mediaPath = $shoe->getMediaPath();
+//
+//        echo "MediaPath = ";
+//
+//        if(isset($mediaPath))
+//            echo "not null";
+//        else
+//            echo "null";
+//
+//        echo "<br>";
+//        echo "<br>";
+//        echo "<br>";
+//        
+//        
+//        
+//     }
+//     
      ?>
-     
-      <div id="blueimp-gallery" class="blueimp-gallery">
-          <!-- The container for the modal slides -->
-          <div class="slides"></div>
-          <!-- Controls for the borderless lightbox -->
-          <h3 class="title"></h3>
-          <a class="prev">‹</a>
-          <a class="next">›</a>
-          <a class="close">×</a>
-          <a class="play-pause"></a>
-          <ol class="indicator"></ol>
-          <!-- The modal dialog, which will be used to wrap the lightbox content -->
-          <div class="modal fade">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <button type="button" class="close" aria-hidden="true">&times;</button>
-                          <h4 class="modal-title"></h4>
-                      </div>
-                      <div class="modal-body next"></div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-default pull-left prev">
-                              <i class="glyphicon glyphicon-chevron-left"></i>
-                              Previous
-                          </button>
-                          <button type="button" class="btn btn-primary next">
-                              Next
-                              <i class="glyphicon glyphicon-chevron-right"></i>
-                          </button>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-      
-      
-        <div id="links">
-            <a href="../site_images/banana.jpg" title="Banana" data-gallery>
-            banana</a>
-            <a href="../site_images/apple.jpg" title="Apple" data-gallery>
-             mela</a>
-            <a href="../site_images/orange.jpg" title="Orange" data-gallery>
-             arancia</a>
+
+  <script>
+blueimp.Gallery([
+        {
+            title: 'Apple',
+            href: '../site_images/apple.jpg',
+            type: 'image/jpg'
+        },
+        {
+            title: 'Orange',
+            href: '../site_images/orange.jpg',
+            type: 'image/jpg'
+        },
+        {
+            title: 'Banana',
+            href: '../site_images/banana.jpg',
+            type: 'image/jpg'
+        }
+    ], {
+        container: '#blueimp-gallery-carousel',
+        carousel: true
+    });
+
+});
+</script>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
         </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Hello, world!</h1>
+        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Company 2014</p>
+      </footer>
+    </div> <!-- /container -->
+          
+        <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
+        
+      
+<!--        <div id="links">
+            <a HREF="../site_images/banana.jpg" title="Banana"> <IMG HEIGHT=50 WIDTH=50 SRC="../site_images/banana.jpg"></a>
+            <a HREF="../site_images/apple.jpg" title="Apple"> <IMG HEIGHT=50 WIDTH=50 SRC="../site_images/apple.jpg"></a>
+            <a HREF="../site_images/orange.jpg" title="Orange"> <IMG HEIGHT=50 WIDTH=50 SRC="../site_images/orange.jpg"></a>
+        </div>-->
+
+        <div id="links">
+          <a href="../site_images/banana.jpg" title="Banana">
+              <img height="500" src="../site_images/banana.jpg" alt="Banana">
+          </a>
+          <a href="../site_images/apple.jpg" title="Apple">
+            <img height="500" src="../site_images/apple.jpg" alt="Apple">
+          </a>
+          <a href="../site_images/orange.jpg" title="Orange">
+            <img height="500" src="../site_images/orange.jpg" alt="Orange">
+          </a>
+        </div>
+    
+
      
      
             
         <script src="../js/jquery-2.0.3.js"></script>
-        <script src="../js/jquery.blueimp-gallery.min.js"></script>
-        <script src="../js/bootstrap-image-gallery.min.js"></script>
+        <script src="../js/blueimp-gallery.js"></script>
+        <script src="../js/bootstrap.js"></script>
+        <script src="../js/blueimp-helper.js"></script>
+        <script src="../js/blueimp-gallery.js"></script>
+        <script src="../js/blueimp-gallery-fullscreen.js"></script>
+        <script src="../js/blueimp-gallery-indicator.js"></script>
+        <script src="../js/blueimp-gallery-video.js"></script>
+        <script src="../js/blueimp-gallery-vimeo.js"></script>
+        <script src="../js/blueimp-gallery-youtube.js"></script>

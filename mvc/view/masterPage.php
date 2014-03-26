@@ -23,13 +23,12 @@ include_once basename(__DIR__) . '/../Settings.php';
         <link rel="shortcut icon" href="../images/favicon.ico" />
         <script type="text/javascript" src="../js/jquery-2.0.3.js"></script>
         <script type="text/javascript" src="../js/jquery-ui.js"></script>
-        <link rel="stylesheet" href="../css/bootstrap.css">
+        <link rel="stylesheet" href="../css/stile.css">
         <link href="../css/fixed.css" rel="stylesheet" type="text/css" media="screen" />
         
         
         <link rel="stylesheet" href="../css/bootstrap.css">
         <link rel="stylesheet" href="../css/blueimp-gallery.css">
-        <link rel="stylesheet" href="../css/bootstrap-image-gallery.css">
         
 
     </head>
