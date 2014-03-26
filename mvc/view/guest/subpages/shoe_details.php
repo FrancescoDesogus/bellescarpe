@@ -2,6 +2,20 @@
      
      <?php
      
+//     //Codice per il QR code preso da qua: http://codematrix.altervista.org/archives/1143
+//     require("../phpqrcode/qrlib.php");
+//     
+//     $data = "http://bellescarpecod.altervista.org/mvc/index.php?page=guest&subpage=shoe_detailsaa";
+//     
+//     $filename = 'qrcode'.md5($data.'|'."L".'|'."4").'.png';
+//     
+//     QRcode::png($data, $filename, "L", 4, 2);
+//     
+//     echo '<img src="'.$filename.'" /><hr/>';
+     
+     
+     
+     
      echo "Dati della scarpa con id pari a 1: <br> <br>";
      
      if($shoe == null)
@@ -77,6 +91,9 @@
         echo "<br>";
         echo "<br>";
         echo "<br>";
+        
+        
+        
      }
      
      ?>
