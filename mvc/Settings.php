@@ -22,7 +22,7 @@ class Settings {
                     self::$appPath = 'http://' . $_SERVER['HTTP_HOST'] . '/BelleScarpe/mvc/';
 //                    self::$appPath = 'http://spano.sc.unica.it/desogusFrancesco/progetto/mvc/';
                     break;
-                case 'bellescarpecod.altervista.org':
+                case 'bellescarpecod.altervista.org':                    
                     // configurazione pubblica
                     self::$appPath = 'http://' . $_SERVER['HTTP_HOST'] . '/mvc/';
                     break;

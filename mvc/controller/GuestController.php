@@ -7,6 +7,8 @@ include_once basename(__DIR__) . '/../model/Shoe.php';
 include_once basename(__DIR__) . '/../model/ShoeFactory.php';
 include_once 'BaseController.php';
 
+//echo basename(__DIR__);
+
 /**
  * Controller che gestisce i visitatori non loggati al sito
  */
