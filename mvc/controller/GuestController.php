@@ -56,6 +56,11 @@ class GuestController extends BaseController
                     
                     break;
                 
+                case 'prova':
+                    $viewDescriptor->setSubPage('prova');
+                    
+                    break;
+                
                 case 'login':
                     $viewDescriptor->setSubPage('login');
                     
