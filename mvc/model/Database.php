@@ -5,10 +5,18 @@
  */
 class Database 
 {   
+    
+    //Web
+//    public static $DB_HOST = 'localhost';
+//    public static $DB_USER = 'bellescarpecod';
+//    public static $DB_PASSWORD = 'albero';
+//    public static $DB_NAME = 'my_bellescarpecod';
+    
+    //Local
     public static $DB_HOST = 'localhost';
-    public static $DB_USER = 'bellescarpecod';
-    public static $DB_PASSWORD = 'albero';
-    public static $DB_NAME = 'my_bellescarpecod';
+    public static $DB_USER = 'gabry';
+    public static $DB_PASSWORD = 'gabry';
+    public static $DB_NAME = 'negozio';
     
     
     /**

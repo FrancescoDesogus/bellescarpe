@@ -1,4 +1,6 @@
 <?php
+
+echo "poba";
     $username = "bellescarpecod";
     $password = "albero";
     $host = "localhost";
