@@ -15,6 +15,7 @@ include_once basename(__DIR__) . '/../Settings.php';
 -->
 <html>
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title><?= $viewDescriptor->getTitle()?></title>
         <base href="<?= Settings::getApplicationPath() ?>"/>
@@ -24,11 +25,11 @@ include_once basename(__DIR__) . '/../Settings.php';
         <script type="text/javascript" src="../js/jquery-2.0.3.js"></script>
         <script type="text/javascript" src="../js/jquery-ui.js"></script>
         <link rel="stylesheet" href="../css/stile.css">
-        <!--<link href="../css/fixed.css" rel="stylesheet" type="text/css" media="screen" />-->
+        <link href="../css/fixed.css" rel="stylesheet" type="text/css" media="screen" />
         
         
         <link rel="stylesheet" href="../css/bootstrap.css">
-        <link rel="stylesheet" href="../css/blueimp-gallery.css">
+        <link rel="stylesheet" href="../css/blueimp-gallery.min.css">
         
 
     </head>
