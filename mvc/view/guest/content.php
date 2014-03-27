@@ -1,5 +1,5 @@
 <?php
-    
+
 switch($viewDescriptor->getSubPage()) 
 {
     case 'shoe_details':
@@ -9,6 +9,11 @@ switch($viewDescriptor->getSubPage())
     
     case 'prova':
         include 'subpages/prova.php';
+
+        break;
+    
+    case 'prova2':
+        include 'subpages/prova2.php';
 
         break;
     

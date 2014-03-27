@@ -7,7 +7,9 @@ include_once basename(__DIR__) . '/../model/Shoe.php';
 include_once basename(__DIR__) . '/../model/ShoeFactory.php';
 include_once 'BaseController.php';
 
-//echo basename(__DIR__);
+include_once basename(__DIR__) . '/../../facebook-php-sdk/facebook.php';
+
+
 
 /**
  * Controller che gestisce i visitatori non loggati al sito
@@ -57,7 +59,101 @@ class GuestController extends BaseController
                     break;
                 
                 case 'prova':
+                    
+                    
                     $viewDescriptor->setSubPage('prova');
+                    
+                    
+                    $appid      = 281784095318774;
+                    $appsecret  = "cec392f8e3d40ac5e66e366a85a3730f";
+                    
+                    $facebook   = new Facebook(array(
+                        'appId' => $appid,
+                        'secret' => $appsecret,
+                        'cookie' => true
+                    ));
+                    
+                    $fbuser = $facebook->getUser();
+                    
+                    echo 'I AM RIGHTHERE';
+                    
+                    if ($fbuser) {
+                        echo 'biatch';
+                        
+                        try {
+                            $user_profile = $facebook->api('/me');
+                        }
+                        catch (Exception $e) {
+                            echo 'AAAAADSDSADSADSADSADAD';
+                            echo $e->getMessage();
+                            exit();
+                        }
+                        
+                        $user_fbid  = $fbuser;
+                        $user_email = $user_profile["email"];
+                        $user_fnmae = $user_profile["first_name"];
+                        $user_image = "https://graph.facebook.com/".$user_fbid."/picture?type=large";
+                        
+                        echo 'LLLLLLLLLLLLOLO';
+                        
+                        echo $user_email;
+                        /* Save the user details in your db here */
+                    }
+                    else
+                         echo 'fbuser era false';
+                    
+                    break;
+                
+                case 'prova2':
+                    $viewDescriptor->setSubPage('prova2');
+                    
+                    if(isset($request["name"])) 
+                    {
+                        echo "nome: ".$request["name"]."<br>";
+                        echo "username: ".$request["username"]."<br>";
+                        echo "id: ".$request["id"]."<br>";
+                        echo "email: ".$request["email"]."<br>";
+                    }
+                    else
+                        echo "<br> :( <br>";
+                    
+                    $appid      = 281784095318774;
+                    $appsecret  = "cec392f8e3d40ac5e66e366a85a3730f";
+                    
+                    $facebook   = new Facebook(array(
+                        'appId' => $appid,
+                        'secret' => $appsecret,
+                        'cookie' => true,
+                    ));
+                    
+                    $fbuser = $facebook->getUser();
+                    
+                    echo 'I AM RIGHTHEREASDASDSADSASADDASDSA';
+                    
+                    if ($fbuser) {
+                        echo 'biatch';
+                        
+                        try {
+                            $user_profile = $facebook->api('/me');
+                        }
+                        catch (Exception $e) {
+                            echo 'AAAAADSDSADSADSADSADAD';
+                            echo $e->getMessage();
+                            exit();
+                        }
+                        
+                        $user_fbid  = $fbuser;
+                        $user_email = $user_profile["email"];
+                        $user_fnmae = $user_profile["first_name"];
+                        $user_image = "https://graph.facebook.com/".$user_fbid."/picture?type=large";
+                        
+                        echo 'LLLLLLLLLLLLOLO';
+                        
+                        echo $user_email;
+                        /* Save the user details in your db here */
+                    }
+                    else
+                         echo 'fbuser era false';
                     
                     break;
                 

@@ -1,7 +1,30 @@
-<html>
-<head></head>
-<body>
-<div id="fb-root"></div>
+<?php
+//include 'facebook.php';
+//    $appid      = "XXXXXXXXXX";
+//    $appsecret  = "XXXXXXXXXXXXXXXXXX";
+//    $facebook   = new Facebook(array(
+//        'appId' => $appid,
+//        'secret' => $appsecret,
+//        'cookie' => TRUE,
+//    ));
+//    $fbuser = $facebook->getUser();
+//    if ($fbuser) {
+//        try {
+//            $user_profile = $facebook->api('/me');
+//        }
+//        catch (Exception $e) {
+//            echo $e->getMessage();
+//            exit();
+//        }
+//        $user_fbid  = $fbuser;
+//        $user_email = $user_profile["email"];
+//        $user_fnmae = $user_profile["first_name"];
+//        $user_image = "https://graph.facebook.com/".$user_fbid."/picture?type=large";
+//        /* Save the user details in your db here */
+//        }
+//    }
+?>
+
 <script>
   window.fbAsyncInit = function() {
   FB.init({
@@ -49,13 +72,11 @@
             console.log("response.name = " + response.name);
             console.log("response.username = " + response.username);
             console.log("response.id  = " + response.id );
-            console.log("response.email  = " + response.email );     
-            
-            post_to_url('/mvc/index.php?page=guest&subpage=prova2', {name: response.name, username: response.username, id: response.id, email: response.email});
+            console.log("response.email  = " + response.email );        
 
-            });
+    });
             
-//            post_to_url('/mvc/index.php?page=guest&subpage=prova2', {name: response.name; username: response.});
+//            post_to_url('/mvc/index.php?page=guest&subpage=prova2', {name: 'Johnny Bravo'});
             
 //            window.location.href = "index.php?page=guest&subpage=prova2";
         }
@@ -77,7 +98,7 @@
       // The same caveats as above apply to the FB.login() call here.
       FB.login();
     }
-  },{scope: 'email,user_photos,user_videos'});
+  });
   };
   
   function post_to_url(path, params, method) {
@@ -122,13 +143,3 @@
     });
   }
 </script>
-
-<!--
-  Below we include the Login Button social plugin. This button uses the JavaScript SDK to
-  present a graphical Login button that triggers the FB.login() function when clicked. -->
-
-
-<fb:login-button show-faces="true" data-scope="email" width="200" max-rows="1" onclick="FBLogin();"></fb:login-button>
-<!--<img src="../facebook-connect.png" alt="Fb Connect" title="Login with facebook" onclick="FBLogin();"/>-->
-</body>
-</html>
