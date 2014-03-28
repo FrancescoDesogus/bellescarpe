@@ -98,30 +98,6 @@
 //     
      ?>
 
-  <script>
-blueimp.Gallery([
-        {
-            title: 'Apple',
-            href: '../site_images/apple.jpg',
-            type: 'image/jpg'
-        },
-        {
-            title: 'Orange',
-            href: '../site_images/orange.jpg',
-            type: 'image/jpg'
-        },
-        {
-            title: 'Banana',
-            href: '../site_images/banana.jpg',
-            type: 'image/jpg'
-        }
-    ], {
-        container: '#blueimp-gallery-carousel',
-        carousel: true
-    });
-
-});
-</script>
   <body>
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -144,15 +120,22 @@ blueimp.Gallery([
         </div><!--/.nav-collapse -->
       </div>
     </div>
-
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1>Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
-      </div>
-    </div>
+        <div id="gallery_container">
+           <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel blueimp-gallery-controls">
+               <div class="slides"></div>
+               <h3 class="title"></h3>
+               <a class="prev">‹</a>
+                   <a class="next">›</a>
+<!--               <a class="left frecce">
+                   
+               </a>
+               <a class="right frecce ">
+               </a>-->
+               <a class="play-pause"></a>
+               <ol class="indicator"></ol>
+           </div>
+       </div>
 
     <div class="container">
       <!-- Example row of columns -->
@@ -180,46 +163,54 @@ blueimp.Gallery([
         <p>&copy; Company 2014</p>
       </footer>
     </div> <!-- /container -->
-          
-        <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
-            <div class="slides"></div>
-            <h3 class="title"></h3>
-            <a class="prev">‹</a>
-            <a class="next">›</a>
-            <a class="play-pause"></a>
-            <ol class="indicator"></ol>
-        </div>
-        
-      
-<!--        <div id="links">
-            <a HREF="../site_images/banana.jpg" title="Banana"> <IMG HEIGHT=50 WIDTH=50 SRC="../site_images/banana.jpg"></a>
-            <a HREF="../site_images/apple.jpg" title="Apple"> <IMG HEIGHT=50 WIDTH=50 SRC="../site_images/apple.jpg"></a>
-            <a HREF="../site_images/orange.jpg" title="Orange"> <IMG HEIGHT=50 WIDTH=50 SRC="../site_images/orange.jpg"></a>
-        </div>-->
 
-        <div id="links">
-          <a href="../site_images/banana.jpg" title="Banana">
-              <img height="500" src="../site_images/banana.jpg" alt="Banana">
-          </a>
-          <a href="../site_images/apple.jpg" title="Apple">
-            <img height="500" src="../site_images/apple.jpg" alt="Apple">
-          </a>
-          <a href="../site_images/orange.jpg" title="Orange">
-            <img height="500" src="../site_images/orange.jpg" alt="Orange">
-          </a>
-        </div>
-    
-
-     
-     
-            
         <script src="../js/jquery-2.0.3.js"></script>
-        <script src="../js/blueimp-gallery.js"></script>
         <script src="../js/bootstrap.js"></script>
-        <script src="../js/blueimp-helper.js"></script>
-        <script src="../js/blueimp-gallery.js"></script>
-        <script src="../js/blueimp-gallery-fullscreen.js"></script>
-        <script src="../js/blueimp-gallery-indicator.js"></script>
-        <script src="../js/blueimp-gallery-video.js"></script>
-        <script src="../js/blueimp-gallery-vimeo.js"></script>
+        <script src="../js/blueimp-gallery.min.js"></script>
         <script src="../js/blueimp-gallery-youtube.js"></script>
+                    <script>
+blueimp.Gallery([
+        {
+            title: 'Apple',
+            href: '../site_images/apple.jpg',
+            type: 'image/jpg',
+            thumbnail: '../img/banana_thumb.jpg'
+        },
+        {
+            title: 'Orange',
+            href: '../site_images/orange.jpg',
+            type: 'image/jpg'
+        },
+        {
+            title: 'Banana',
+            href: '../site_images/banana.jpg',
+            type: 'image/jpg'
+        },
+        {
+            title: 'Immagine 1',
+            href: 'http://farm4.static.flickr.com/3675/13408578274_b27808d172_c.jpg',
+            type: 'image/jpg'
+        },
+        {
+            title: 'Immagine 2',
+            href: 'http://farm4.static.flickr.com/3786/13406912874_ce914ea564_c.jpg',
+            type: 'image/jpg'
+        },
+        {
+            title: 'Immagine 3',
+            href: 'http://farm4.static.flickr.com/3710/13409099245_fc8598d5b4_c.jpg',
+            type: 'image/jpg'
+        },
+        {
+            title: 'A YouYube video',
+            href: 'https://www.youtube.com/watch?v=SpfMceJDjL4',
+            type: 'text/html',
+            youtube: 'SpfMceJDjL4',
+            poster: 'https://img.youtube.com/vi/SpfMceJDjL4/0.jpg'
+        }
+    ], {
+        container: '#blueimp-gallery-carousel',
+        carousel: true
+    });
+
+</script>  
