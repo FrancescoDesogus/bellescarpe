@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <!-- Important Owl stylesheet -->
+        <link rel="stylesheet" href="../css/owl.carousel.css">
+
+        <!-- Default Theme -->
+        <link rel="stylesheet" href="../css/owl.theme.css">
+     <link rel="stylesheet" href="../css/bootstrap.css">
+        <link rel="stylesheet" href="../css/demo.css">
+
+    </head>
+    <body>
+        
+       <div id="owl-example" class="owl-carousel">
+        <div class="item"> <img src="../site_images/apple.jpg" width="400px">  </div>
+        <div class="item"> <img src="../site_images/banana.jpg" width="400px"> </div>
+        <div class="item"> <img src="../site_images/orange.jpg" width="400px"> </div>
+        <div class="item"> <img src="http://farm4.static.flickr.com/3675/13408578274_b27808d172_c.jpg" width="400px"> </div>
+        <div class="item"> <img src="http://farm4.static.flickr.com/3786/13406912874_ce914ea564_c.jpg" width="400px"> </div>
+        <div class="item video"> <iframe src="//www.youtube.com/embed/SpfMceJDjL4" frameborder="0" allowfullscreen></iframe> </div>
+       </div>
+        
+        <div class="container">
+      <!-- Example row of columns -->
+      <div class="row">
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+       </div>
+        <div class="col-md-4">
+          <h2>Heading</h2>
+          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Company 2014</p>
+      </footer>
+    </div> <!-- /container -->
+        
+
+        
+        <!--  jQuery 1.7+  -->
+        <script src="../js/jquery-2.0.3.js"></script>
+
+        <!-- Include js plugin -->
+        <script src="../js/owl.carousel.min.js"></script>
+        <script src="../js/bootstrap.js"></script>
+        <script>
+            $(document).ready(function() {
+ 
+            $("#owl-example").owlCarousel({
+                navigation : true, // Show next and prev buttons
+                slideSpeed : 300,
+                paginationSpeed : 400,
+                singleItem:true,                
+                autoHeight: true
+            });
+
+          });
+        </script>
+
+    </body>
+</html>

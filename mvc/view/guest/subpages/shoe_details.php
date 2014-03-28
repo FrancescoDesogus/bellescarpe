@@ -122,20 +122,21 @@
     </div>
     <!-- Main jumbotron for a primary marketing message or call to action -->
         <div id="gallery_container">
-           <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel blueimp-gallery-controls">
+           <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
                <div class="slides"></div>
-               <h3 class="title"></h3>
-               <a class="prev">‹</a>
-                   <a class="next">›</a>
-<!--               <a class="left frecce">
-                   
-               </a>
-               <a class="right frecce ">
-               </a>-->
+               <h2 class="title"></h2>
                <a class="play-pause"></a>
-               <ol class="indicator"></ol>
+               <!--<ol class="indicator"></ol>-->
            </div>
        </div>
+    
+    <div class="indicator-slides">
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1" class=""></li>
+            <li data-target="#myCarousel" data-slide-to="2" class=""></li>
+        </ol>
+    </div>
 
     <div class="container">
       <!-- Example row of columns -->
