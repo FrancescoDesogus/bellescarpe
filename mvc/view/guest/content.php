@@ -17,6 +17,11 @@ switch($viewDescriptor->getSubPage())
 
         break;
     
+    case 'registration':
+        include 'subpages/registration.php';
+
+        break;
+    
     default:
         include 'subpages/home.php';
         break; 

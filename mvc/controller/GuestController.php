@@ -60,11 +60,10 @@ class GuestController extends BaseController
                 
                 case 'prova':
                     
-                    
                     $viewDescriptor->setSubPage('prova');
                     
                     
-                    $appid      = 281784095318774;
+                    $appid      = '281784095318774';
                     $appsecret  = "cec392f8e3d40ac5e66e366a85a3730f";
                     
                     $facebook   = new Facebook(array(
@@ -75,8 +74,6 @@ class GuestController extends BaseController
                     
                     $fbuser = $facebook->getUser();
                     
-                    echo 'I AM RIGHTHERE';
-                    
                     if ($fbuser) {
                         echo 'biatch';
                         
@@ -84,7 +81,6 @@ class GuestController extends BaseController
                             $user_profile = $facebook->api('/me');
                         }
                         catch (Exception $e) {
-                            echo 'AAAAADSDSADSADSADSADAD';
                             echo $e->getMessage();
                             exit();
                         }
@@ -94,13 +90,12 @@ class GuestController extends BaseController
                         $user_fnmae = $user_profile["first_name"];
                         $user_image = "https://graph.facebook.com/".$user_fbid."/picture?type=large";
                         
-                        echo 'LLLLLLLLLLLLOLO';
                         
-                        echo $user_email;
+                        echo "<br>".$user_email."<br>";
                         /* Save the user details in your db here */
                     }
                     else
-                         echo 'fbuser era false';
+                         echo "<br>".'fbuser era false'."<br>";
                     
                     break;
                 
@@ -117,7 +112,7 @@ class GuestController extends BaseController
                     else
                         echo "<br> :( <br>";
                     
-                    $appid      = 281784095318774;
+                    $appid      = '281784095318774';
                     $appsecret  = "cec392f8e3d40ac5e66e366a85a3730f";
                     
                     $facebook   = new Facebook(array(
@@ -128,16 +123,11 @@ class GuestController extends BaseController
                     
                     $fbuser = $facebook->getUser();
                     
-                    echo 'I AM RIGHTHEREASDASDSADSASADDASDSA';
-                    
                     if ($fbuser) {
-                        echo 'biatch';
-                        
                         try {
                             $user_profile = $facebook->api('/me');
                         }
                         catch (Exception $e) {
-                            echo 'AAAAADSDSADSADSADSADAD';
                             echo $e->getMessage();
                             exit();
                         }
@@ -145,15 +135,15 @@ class GuestController extends BaseController
                         $user_fbid  = $fbuser;
                         $user_email = $user_profile["email"];
                         $user_fnmae = $user_profile["first_name"];
-                        $user_image = "https://graph.facebook.com/".$user_fbid."/picture?type=large";
                         
-                        echo 'LLLLLLLLLLLLOLO';
-                        
-                        echo $user_email;
+                        echo "<br>".$user_profile["first_name"]."<br>";
+                        echo "<br>".$user_profile["last_name"]."<br>";
+                        echo "<br>".$user_email."<br>";
+         
                         /* Save the user details in your db here */
                     }
                     else
-                         echo 'fbuser era false';
+                         echo "<br>".'fbuser era false'."<br>";
                     
                     break;
                 
@@ -165,6 +155,74 @@ class GuestController extends BaseController
                 case 'registration':
                     $viewDescriptor->setSubPage('registration');
                     
+                    
+                    echo "lololol";
+            
+            if ($_REQUEST['signed_request'])
+                    {
+                        $response = $this->parse_signed_request($_REQUEST['signed_request'], 'cec392f8e3d40ac5e66e366a85a3730f');//secret
+
+                        if($response)
+                        {
+                            //Fields values
+                            $email=$response['registration']['email'];
+                            $name=$response['registration']['name'];
+                            $gender=$response['registration']['gender'];
+                            $user_fb_id=$response['user_id'];
+                            $location=$response['registration']['location']['name'];
+                            $bday = $response['registration']['birthday'];
+
+                            //print entire array response
+                            echo '<h3>Response Array</h3>';
+                            echo '<pre>';
+                            print_r($response);
+                            echo '</pre>';
+
+                            //print values
+                            echo '<h3>Fields Values</h3>';
+                            echo 'email: ' . $email . '<br />';
+                            echo 'Name: ' . $name . '<br />';
+                            echo 'Gender: ' . $gender . '<br />';
+                            echo 'Facebook Id: ' . $user_fb_id . '<br />';
+                            echo 'Location: ' . $location . '<br />';
+                            echo 'Birthday: ' . $bday . '<br />';
+
+                        }
+                    }
+                    
+                    
+//                    if ($_REQUEST['signed_request'])
+//                    {
+//                        $response = parse_signed_request($_REQUEST['signed_request'], 'cec392f8e3d40ac5e66e366a85a3730f');//secret
+//
+//                        if($response)
+//                        {
+//                            //Fields values
+//                            $email=$response['registration']['email'];
+//                            $name=$response['registration']['name'];
+//                            $gender=$response['registration']['gender'];
+//                            $user_fb_id=$response['user_id'];
+//                            $location=$response['registration']['location']['name'];
+//                            $bday = $response['registration']['birthday'];
+//
+//                            //print entire array response
+//                            echo '<h3>Response Array</h3>';
+//                            echo '<pre>';
+//                            print_r($response);
+//                            echo '</pre>';
+//
+//                            //print values
+//                            echo '<h3>Fields Values</h3>';
+//                            echo 'email: ' . $email . '<br />';
+//                            echo 'Name: ' . $name . '<br />';
+//                            echo 'Gender: ' . $gender . '<br />';
+//                            echo 'Facebook Id: ' . $user_fb_id . '<br />';
+//                            echo 'Location: ' . $location . '<br />';
+//                            echo 'Birthday: ' . $bday . '<br />';
+//
+//                        }
+//                    }
+                    
                     break;
                 
                 default:
@@ -172,7 +230,9 @@ class GuestController extends BaseController
             }
         }
         else
+        {
             $viewDescriptor->setSubPage('shoe_details');
+        }
         
                 
         /* gestione dei comandi; tutte le variabili che vengono create senza essere utilizzate 
@@ -430,6 +490,31 @@ class GuestController extends BaseController
         include_once basename(__DIR__) . '/../view/masterPage.php';
     }
 
+    
+    public function parse_signed_request($signed_request, $secret)
+    {
+        list($encoded_sig, $payload) = explode('.', $signed_request, 2); 
+
+        // decode the data
+        $sig = $this->base64_url_decode($encoded_sig);
+        $data = json_decode($this->base64_url_decode($payload), true);
+
+        // confirm the signature
+        $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
+        
+        if ($sig !== $expected_sig) 
+        {
+            error_log('Bad Signed JSON signature!');
+            return null;
+        }
+
+        return $data;
+    }
+
+    public function base64_url_decode($input) 
+    {
+        return base64_decode(strtr($input, '-_', '+/'));
+    }
 }
 
 ?>

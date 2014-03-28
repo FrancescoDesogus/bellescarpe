@@ -1,29 +1,3 @@
-<?php
-//include 'facebook.php';
-//    $appid      = "XXXXXXXXXX";
-//    $appsecret  = "XXXXXXXXXXXXXXXXXX";
-//    $facebook   = new Facebook(array(
-//        'appId' => $appid,
-//        'secret' => $appsecret,
-//        'cookie' => TRUE,
-//    ));
-//    $fbuser = $facebook->getUser();
-//    if ($fbuser) {
-//        try {
-//            $user_profile = $facebook->api('/me');
-//        }
-//        catch (Exception $e) {
-//            echo $e->getMessage();
-//            exit();
-//        }
-//        $user_fbid  = $fbuser;
-//        $user_email = $user_profile["email"];
-//        $user_fnmae = $user_profile["first_name"];
-//        $user_image = "https://graph.facebook.com/".$user_fbid."/picture?type=large";
-//        /* Save the user details in your db here */
-//        }
-//    }
-?>
 
 <script>
   window.fbAsyncInit = function() {
@@ -143,3 +117,6 @@
     });
   }
 </script>
+
+
+<div class="fb-like" data-send="true" data-width="450" data-show-faces="true"></div>
