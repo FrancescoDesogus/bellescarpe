@@ -102,49 +102,18 @@ class GuestController extends BaseController
                 case 'prova2':
                     $viewDescriptor->setSubPage('prova2');
                     
-                    if(isset($request["name"])) 
-                    {
-                        echo "nome: ".$request["name"]."<br>";
-                        echo "username: ".$request["username"]."<br>";
-                        echo "id: ".$request["id"]."<br>";
-                        echo "email: ".$request["email"]."<br>";
-                    }
-                    else
-                        echo "<br> :( <br>";
+                    $facebook = $this->initializeFacebook();
                     
-                    $appid      = '281784095318774';
-                    $appsecret  = "cec392f8e3d40ac5e66e366a85a3730f";
+                    $loginUrl = $facebook->getLoginUrl($params);
                     
-                    $facebook   = new Facebook(array(
-                        'appId' => $appid,
-                        'secret' => $appsecret,
-                        'cookie' => true,
-                    ));
-                    
-                    $fbuser = $facebook->getUser();
-                    
-                    if ($fbuser) {
-                        try {
-                            $user_profile = $facebook->api('/me');
-                        }
-                        catch (Exception $e) {
-                            echo $e->getMessage();
-                            exit();
-                        }
-                        
-                        $user_fbid  = $fbuser;
-                        $user_email = $user_profile["email"];
-                        $user_fnmae = $user_profile["first_name"];
-                        
-                        echo "<br>".$user_profile["first_name"]."<br>";
-                        echo "<br>".$user_profile["last_name"]."<br>";
-                        echo "<br>".$user_email."<br>";
-         
-                        /* Save the user details in your db here */
-                    }
-                    else
-                         echo "<br>".'fbuser era false'."<br>";
-                    
+                    $params = array(
+                        'client_id' => $appid,
+                        'scope' => 'email, publish_stream',
+                        'redirect_uri' => 'http://bellescarpecod.altervista.org/mvc/index.php?page=guest&subpage=registration&mode=facebook'
+                    );
+
+                    $loginUrl = $facebook->getLoginUrl($params);
+
                     break;
                 
                 case 'login':
@@ -155,73 +124,35 @@ class GuestController extends BaseController
                 case 'registration':
                     $viewDescriptor->setSubPage('registration');
                     
+                    $username = '';
+                    $email = '';
                     
-                    echo "lololol";
-            
-            if ($_REQUEST['signed_request'])
+                    if(isset($request["mode"]) && $request["mode"] = 'facebook') 
                     {
-                        $response = $this->parse_signed_request($_REQUEST['signed_request'], 'cec392f8e3d40ac5e66e366a85a3730f');//secret
-
-                        if($response)
+                        $facebook = $this->initializeFacebook();
+                        
+                        $fbuser = $facebook->getUser();
+                    
+                        if ($fbuser)
                         {
-                            //Fields values
-                            $email=$response['registration']['email'];
-                            $name=$response['registration']['name'];
-                            $gender=$response['registration']['gender'];
-                            $user_fb_id=$response['user_id'];
-                            $location=$response['registration']['location']['name'];
-                            $bday = $response['registration']['birthday'];
+                            try 
+                            {
+                                $user_profile = $facebook->api('/me');
+                            }
+                            catch (Exception $e) 
+                            {
+                                echo $e->getMessage();
+                                exit();
+                            }
 
-                            //print entire array response
-                            echo '<h3>Response Array</h3>';
-                            echo '<pre>';
-                            print_r($response);
-                            echo '</pre>';
-
-                            //print values
-                            echo '<h3>Fields Values</h3>';
-                            echo 'email: ' . $email . '<br />';
-                            echo 'Name: ' . $name . '<br />';
-                            echo 'Gender: ' . $gender . '<br />';
-                            echo 'Facebook Id: ' . $user_fb_id . '<br />';
-                            echo 'Location: ' . $location . '<br />';
-                            echo 'Birthday: ' . $bday . '<br />';
-
+                            $user_fbid  = $fbuser;
+                            
+                            $username = $user_profile["username"];
+                            $email = $user_profile["email"];
                         }
+                        else
+                            echo "NONONONO";
                     }
-                    
-                    
-//                    if ($_REQUEST['signed_request'])
-//                    {
-//                        $response = parse_signed_request($_REQUEST['signed_request'], 'cec392f8e3d40ac5e66e366a85a3730f');//secret
-//
-//                        if($response)
-//                        {
-//                            //Fields values
-//                            $email=$response['registration']['email'];
-//                            $name=$response['registration']['name'];
-//                            $gender=$response['registration']['gender'];
-//                            $user_fb_id=$response['user_id'];
-//                            $location=$response['registration']['location']['name'];
-//                            $bday = $response['registration']['birthday'];
-//
-//                            //print entire array response
-//                            echo '<h3>Response Array</h3>';
-//                            echo '<pre>';
-//                            print_r($response);
-//                            echo '</pre>';
-//
-//                            //print values
-//                            echo '<h3>Fields Values</h3>';
-//                            echo 'email: ' . $email . '<br />';
-//                            echo 'Name: ' . $name . '<br />';
-//                            echo 'Gender: ' . $gender . '<br />';
-//                            echo 'Facebook Id: ' . $user_fb_id . '<br />';
-//                            echo 'Location: ' . $location . '<br />';
-//                            echo 'Birthday: ' . $bday . '<br />';
-//
-//                        }
-//                    }
                     
                     break;
                 
@@ -491,30 +422,19 @@ class GuestController extends BaseController
     }
 
     
-    public function parse_signed_request($signed_request, $secret)
+    private function initializeFacebook()
     {
-        list($encoded_sig, $payload) = explode('.', $signed_request, 2); 
+        $appid      = '281784095318774';
+        $appsecret  = "cec392f8e3d40ac5e66e366a85a3730f";
 
-        // decode the data
-        $sig = $this->base64_url_decode($encoded_sig);
-        $data = json_decode($this->base64_url_decode($payload), true);
-
-        // confirm the signature
-        $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
+        $facebook   = new Facebook(array(
+            'appId' => $appid,
+            'secret' => $appsecret,
+            'cookie' => true,
+        ));
         
-        if ($sig !== $expected_sig) 
-        {
-            error_log('Bad Signed JSON signature!');
-            return null;
-        }
-
-        return $data;
+        return $facebook;
     }
 
-    public function base64_url_decode($input) 
-    {
-        return base64_decode(strtr($input, '-_', '+/'));
-    }
 }
-
 ?>
