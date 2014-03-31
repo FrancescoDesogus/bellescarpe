@@ -1,8 +1,11 @@
+<?php 
+$myURL = 'http://bellescarpecod.altervista.org/mvc/index.php?page=guest&subpage=registration';
+?>
 
 <div class="input-form">
     <h2 class="icon-title h-registration">Registrazione</h2>
 
-    <form method="post" action="index.php?page=guest&subpage=registration&cmd=register">
+    <form method="post" action="visitor/registration_customer">
         <input type="hidden" name="cmd" value="register"/>
     
         <label for="form_username"><strong>Username: </strong></label>
@@ -21,7 +24,7 @@
         <br>
         
         <label for="form_email"><strong>Email: </strong></label>
-        <input class="inputBar" type="email" name="email" id="form_email" value="<?= $email ?>" readOnly="<?= $isReadOnly ?>"/> 
+        <input class="inputBar" type="email" name="email" id="form_email" value="<?= $email ?>"/> 
         
 
         <div class="buttonCenter">

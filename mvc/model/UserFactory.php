@@ -90,6 +90,51 @@ class UserFactory
         
         return null;
     }
+    
+    
+    /**
+     * Carica un utente (se esiste) tramite il suo id di facebook
+     * 
+     * @param String $facebookId l'id facebook dell'utente
+     * 
+     * @return l'utente, o altrimenti null se l'utente con l'id facebook specificato non è stato trovato nel db (quindi non si è registrato ancora tramite facebook)
+     */
+    public static function loadFacebookUser($facebookId) 
+    {
+        //Effettuo la connessione al database
+        $mysqli = Database::connect();
+        
+        if(isset($mysqli))
+        { 
+            //Recupero tutte le righe che hanno username pari a quello specificato
+            //(al più sarà una riga)
+            $query = "SELECT * FROM Utente WHERE facebook_id = $facebookId";
+            
+            $result = $mysqli->query($query);
+            
+            $user = null;
+            
+            if(Database::checkForErrors($mysqli) && $result->num_rows == 1)
+            {
+                $row = $result->fetch_object();
+                
+                $id = $row->id;
+                $username = $row->username;
+                $password = $row->password;
+                $email = $row->email;
+
+                $user = new User($username, $password, $id, User::USER, $email, $facebookId);
+            }
+            
+            $mysqli->close();    
+            
+            return $user;
+        }
+        
+        return null;
+    }
+    
+    
 
     
     /**
@@ -98,57 +143,68 @@ class UserFactory
      * 
      * @param String $username
      * @param String $password
-     * @param int $userType
-     * @param String $name
-     * @param String $surname
      * @param String $email
-     * @param String $adress
-     * @param int $civicNumber
-     * @param String $city
-     * @param int $cap
-     * @param String $company
-     * @param float $credit
+     * @param String $facebookId l'id facebook dell'utente (è null se l'uente non si sta registrando tramite facebook)
      * 
      * @return l'utente appena creato, null altrimenti
      */
-    public static function addUser($username, $password, $userType, $name, $surname, $email, $adress, $civicNumber, $city, $cap, $company, $credit) 
+    public static function addUser($username, $password, $email, $facebookId) 
     {        
         $mysqli = Database::connect();
         
         if(isset($mysqli))
         {           
-            /* Dato che nella compilazione del form il database è vulnerabile, utilizzo un 
-             * prepared statemenet per inserire i parametri inseriti dall'utente nel database */
-            $query = "INSERT INTO user (id, userType, username, password, name, surname, email, adress, civicNumber, city, cap, company, balance)
-                      VALUES (default, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//            /* Dato che nella compilazione del form il database è vulnerabile, utilizzo un 
+//             * prepared statemenet per inserire i parametri inseriti dall'utente nel database */
+//            $query = "INSERT INTO Utente (id, username, password, email, facebook_id)
+//                      VALUES (default, ?, ?, ?, ?)";
+//
+//            $statement = $mysqli->stmt_init();   
+//            
+//            $statement->prepare($query);
+//            
+////            $facebookId = strval($facebookId);
+//                        
+//            $statement->bind_param("isssi", $username, $password, $email, $facebookId);
+//            
+//      
+//            $statement->execute();
+//            
+//            $statement->store_result();
+//            
+//            if(Database::checkForErrors($mysqli))
+//            { 
+//                $id = $statement->insert_id;
+//                
+//                echo "new user id: ".$id;
+//                
+//                
+//                $user = new User($username, $password, $id, User::USER, $email, $facebookId);
+//                                
+//                $mysqli->close();
+//                
+//                //E lo ritorno
+//                return $user;
+//            }
+            
+            
+            $query = "INSERT INTO Utente (id, username, password, email, facebook_id)
+                      VALUES (default, '$username', '$password', '$email', '$facebookId');";
 
-            $statement = $mysqli->stmt_init();   
+            echo $query;
             
-            $statement->prepare($query);
-                        
-            $statement->bind_param("issssssisisd", $userType, $username, $password, $name, $surname,
-                                                   $email, $adress, $civicNumber, $city, $cap, $company, $credit);
-            
-      
-            $statement->execute();
-            
-            $statement->store_result();
+            $result = $mysqli->query($query);
             
             
-            if(Database::checkForErrors($mysqli))
-            { 
-                //Recupero lo user appena aggiunto
-                $user = self::searchUserByUsername($username, $userType);
-                                
-                $mysqli->close();
-                
-                //E lo ritorno
-                return $user;
-            }
+            $user = null;
+
+            if(Database::checkForErrors($mysqli) && $mysqli->affected_rows == 1)
+                $user = new User($username, $password, $id, User::USER, $email, $facebookId);
+           
             
             $mysqli->close();
             
-            return null;
+            return $user;
         }
         
         return null;

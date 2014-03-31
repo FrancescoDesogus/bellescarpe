@@ -39,6 +39,14 @@ class User
     
     
     /**
+     * L'id facebook dell'utente (è null se l'utente non si è registrato tramite facebook)
+     * 
+     * @var String 
+     */
+    private $facebookId; 
+    
+    
+    /**
      * Il tipo di user 
      * 
      * @var int 
@@ -69,15 +77,16 @@ class User
     /**
      * Costruttore
      */
-    public function __construct($pUserName, $pPassword, $pId, $pUserType, $pName, $pSurname, $pEmail) 
+    public function __construct($pUserName, $pPassword, $pId, $pUserType, $pEmail, $pFacebookId) 
     {        
         $this->setUsername($pUserName);
         $this->setPassword($pPassword);
         $this->setId($pId);
         $this->setUserType($pUserType);
-        $this->setName($pName);
-        $this->setSurname($pSurname);
+//        $this->setName($pName);
+//        $this->setSurname($pSurname);
         $this->setEmail($pEmail);
+        $this->setFacebookId($pFacebookId);
 
         
         //Se non indicato esplicitamente, do' per scontato che l'utente non sia impersonato da un admin
@@ -138,6 +147,17 @@ class User
     public function getEmail() 
     {
         return $this->email;
+    }
+    
+    
+    /**
+     * Restituisce l'id facebook dell'utente (è null se l'utente non si è registrato tramite facebook)
+     * 
+     * @return String
+     */
+    public function getFacebookId() 
+    {
+        return $this->facebookId;
     }
     
     
@@ -251,8 +271,8 @@ class User
         switch($pUserType) 
         {
             case User::ADMIN:
-            case User::CUSTOMER:
-            case User::RETAILER:
+//            case User::CUSTOMER:
+            case User::USER:
                 $this->userType = $pUserType;
                 return true;
             default:
@@ -277,6 +297,21 @@ class User
         return true;
     }
 
+    /**
+     * Imposta l'id facebook dell'utente
+     * 
+     * @param String $pFacebookId 
+     * 
+     * @return boolean true se l'id è stato messo, false altrimenti
+     */
+    public function setFacebookId($pFacebookId) 
+    {
+        $this->facebookId = $pFacebookId;
+        
+        return true;
+    }
+    
+    
     /**
      * Imposta l'id dell'utente
      * 

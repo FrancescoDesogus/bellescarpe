@@ -72,20 +72,22 @@ class BaseController
             //le parti della home a seconda dell'user
             switch($user->getUserType()) 
             {
-                case User::ADMIN:
-                    $pageTitle = 'openbook.com';
-                    $path = '/../view/admin/';
+                case User::USER:
+                    echo "watch out bitch";
+                    
+                    $pageTitle = 'BelleScarpe';
+                    $path = '/../view/user/';
                     break;
 
-                case User::CUSTOMER:                               
-                    $pageTitle = 'openbook.com';
-                    $path = '/../view/customer/';
-                    break;
-
-                case User::RETAILER:                
-                    $pageTitle = 'openbook.com';
-                    $path = '/../view/retailer/';
-                    break;
+//                case User::CUSTOMER:                               
+//                    $pageTitle = 'openbook.com';
+//                    $path = '/../view/customer/';
+//                    break;
+//
+//                case User::RETAILER:                
+//                    $pageTitle = 'openbook.com';
+//                    $path = '/../view/retailer/';
+//                    break;
             }
         } 
         //Se non è stato salvato un utente in sessione vuol dire che chi sta
@@ -95,10 +97,10 @@ class BaseController
             $pageTitle = 'BelleScarpe';
             $path = '/../view/guest/';
         }
-        
         //Se almeno un elemento dello switch è stato eseguito, carico la pagina
+        
         if(isset($path))
-        {                 
+        {                             
             $viewDescriptor->setTitle($pageTitle);
             $viewDescriptor->setLogoutFile(basename(__DIR__) . $path . 'logout.php');
             $viewDescriptor->setTabsFile(basename(__DIR__) . $path . 'tabs.php');
@@ -129,30 +131,30 @@ class BaseController
      * @param string $username lo username specificato
      * @param string $password la password specificata
      */
-    protected function login($pViewDescriptor, $username, $password) 
-    {
-        //Controllo i dati inseriti corrispondono ad un utente
-        $user = UserFactory::loadUser($username, $password);
-        
-        //Se la variabile user è settata, procedo con il login
-        if(isset($user)) 
-        {
-            //Se l'utente esiste, lo salvo nell'array di sessione...
-            $_SESSION[self::user] = $user;
-            
-            //...segno che la pagina che si visualizzerà è la home dell'utente...
-            $pViewDescriptor->setSubpage('home');
-            
-            //...e carico quindi le parti della pagina
-            $this->showPage($pViewDescriptor, $_SESSION);
-        } 
-        //Altrimenti inserisco un errore da far apparire nella pagina di login e la ricarico
-        else 
-        {
-            $pViewDescriptor->setErrorMessage("Utente sconosciuto o password errata");
-            $this->showPage($pViewDescriptor, $_SESSION);
-        }
-    }
+//    protected function login($pViewDescriptor, $username, $password) 
+//    {
+//        //Controllo i dati inseriti corrispondono ad un utente
+//        $user = UserFactory::loadUser($username, $password);
+//        
+//        //Se la variabile user è settata, procedo con il login
+//        if(isset($user)) 
+//        {
+//            //Se l'utente esiste, lo salvo nell'array di sessione...
+//            $_SESSION[self::user] = $user;
+//            
+//            //...segno che la pagina che si visualizzerà è la home dell'utente...
+//            $pViewDescriptor->setSubpage('home');
+//            
+//            //...e carico quindi le parti della pagina
+//            $this->showPage($pViewDescriptor, $_SESSION);
+//        } 
+//        //Altrimenti inserisco un errore da far apparire nella pagina di login e la ricarico
+//        else 
+//        {
+//            $pViewDescriptor->setErrorMessage("Utente sconosciuto o password errata");
+//            $this->showPage($pViewDescriptor, $_SESSION);
+//        }
+//    }
 
     /**
      * Procedura di logout dal sistema 
@@ -174,9 +176,9 @@ class BaseController
         session_destroy();
         
         //Adesso carico la pagina della home dei visitatori
-        $this->showPage($viewDescriptor, $_SESSION);
-        
-        require basename(__DIR__) . '/../view/masterPage.php';
+//        $this->showPage($viewDescriptor, $_SESSION);
+//        
+//        require basename(__DIR__) . '/../view/masterPage.php';
     }
     
 

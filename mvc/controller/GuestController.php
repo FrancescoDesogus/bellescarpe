@@ -16,6 +16,9 @@ include_once basename(__DIR__) . '/../../facebook-php-sdk/facebook.php';
  */
 class GuestController extends BaseController 
 {  
+    public static $FACEBOOK_APP_ID = '281784095318774';
+    public static $FACEBOOK_SECRET_ID = 'cec392f8e3d40ac5e66e366a85a3730f';
+    
     //Costruttore
     public function __construct() 
     {
@@ -40,14 +43,22 @@ class GuestController extends BaseController
         if($this->isLoggedIn()) 
         {
             //...lo recupero (variabile usata nella view della home)...
-            $user = $session[self::user];
-
+//            $user = $session[self::user];
+            
+            $controller = new UserController();
+            
+            $request["subpage"] = null;
+            
+            $controller->handleInput($request, $session);
+            
+            return;
+            
             //...e mostro la sua rispettiva home
-            $this->showPage($viewDescriptor, $session);
+//            $this->showPage($viewDescriptor, $session);
         }
         //Altrimenti controllo dove mi trovo attualmente nel sito
         else if(isset($request["subpage"])) 
-        {   
+        {               
             switch ($request["subpage"]) 
             {
                 //Caso in cui bisogna mostrare il catalogo
@@ -101,23 +112,86 @@ class GuestController extends BaseController
                 
                 case 'prova2':
                     $viewDescriptor->setSubPage('prova2');
-                    
-                    $facebook = $this->initializeFacebook();
-                    
-                    $loginUrl = $facebook->getLoginUrl($params);
-                    
+                                        
+                    $facebook   = new Facebook(array(
+                        'appId' => self::$FACEBOOK_APP_ID,
+                        'secret' => self::$FACEBOOK_SECRET_ID,
+                        'cookie' => true,
+                    ));
+                                        
                     $params = array(
-                        'client_id' => $appid,
-                        'scope' => 'email, publish_stream',
-                        'redirect_uri' => 'http://bellescarpecod.altervista.org/mvc/index.php?page=guest&subpage=registration&mode=facebook'
+                        'client_id' => self::$FACEBOOK_APP_ID,
+                        'scope' => 'email',
+                        'redirect_uri' => 'http://bellescarpecod.altervista.org/mvc/index.php?page=guest&subpage=login&mode=facebook'
                     );
-
+                                        
                     $loginUrl = $facebook->getLoginUrl($params);
-
+                                        
                     break;
                 
                 case 'login':
                     $viewDescriptor->setSubPage('login');
+                    
+                    if(isset($request["mode"]) && $request["mode"] = 'facebook') 
+                    {
+                        $facebook   = new Facebook(array(
+                            'appId' => self::$FACEBOOK_APP_ID,
+                            'secret' => self::$FACEBOOK_SECRET_ID,
+                            'cookie' => true,
+                        ));
+                        
+                        $userFacebookId = $facebook->getUser();
+
+                        if($userFacebookId)
+                        {
+                            $user = UserFactory::loadFacebookUser($userFacebookId);
+                            
+                            //Se la variabile user è settata, procedo con il login
+                            if(isset($user)) 
+                            {                                
+                                //Se l'utente esiste, lo salvo nell'array di sessione...
+                                $_SESSION[self::user] = $user;
+
+                                //...segno che la pagina che si visualizzerà è la home dell'utente...
+                                $viewDescriptor->setSubpage('prova_user');
+
+                                //...e carico quindi le parti della pagina
+                                $this->showPage($viewDescriptor, $_SESSION);
+                            } 
+                            //Altrimenti inserisco un errore da far apparire nella pagina di login e la ricarico
+                            else 
+                            {
+//                                $pViewDescriptor->setErrorMessage("Utente sconosciuto o password errata");
+                                
+                                echo "E' la prima volta che ti connetti con Facebook al sito. Crea un nuovo account in modo da associarlo. ";
+                                
+                                $isReadOnly = 1;
+                                
+                                $viewDescriptor->setSubPage('registration');
+                                
+                                try 
+                                {
+                                    $user_profile = $facebook->api('/me');
+                                }
+                                catch (Exception $e) 
+                                {
+                                    echo $e->getMessage();
+                                    exit();
+                                }
+
+                                $user_fbid  = $fbuser;
+
+                                $username = $user_profile["username"];
+                                $email = $user_profile["email"];
+                                
+//                                $this->showPage($pViewDescriptor, $_SESSION);
+                            }
+                           
+                        }
+                        else
+                            echo "C'è stato qualche problema... non è stato possibile recuperare l'id facebook dell'utente";
+                    }
+                    
                     
                     break;
                 
@@ -127,33 +201,6 @@ class GuestController extends BaseController
                     $username = '';
                     $email = '';
                     
-                    if(isset($request["mode"]) && $request["mode"] = 'facebook') 
-                    {
-                        $facebook = $this->initializeFacebook();
-                        
-                        $fbuser = $facebook->getUser();
-                    
-                        if ($fbuser)
-                        {
-                            try 
-                            {
-                                $user_profile = $facebook->api('/me');
-                            }
-                            catch (Exception $e) 
-                            {
-                                echo $e->getMessage();
-                                exit();
-                            }
-
-                            $user_fbid  = $fbuser;
-                            
-                            $username = $user_profile["username"];
-                            $email = $user_profile["email"];
-                        }
-                        else
-                            echo "NONONONO";
-                    }
-                    
                     break;
                 
                 default:
@@ -161,8 +208,8 @@ class GuestController extends BaseController
             }
         }
         else
-        {
-            $viewDescriptor->setSubPage('shoe_details');
+        {                               
+            $viewDescriptor->setSubPage('prova2');
         }
         
                 
@@ -174,126 +221,25 @@ class GuestController extends BaseController
             //Se scatta l'if, si è ricevuto un comando; controllo quindi quale
             switch ($request["cmd"]) 
             {
-                //Comando per mostare un libro generico dal catalogo
-                case 'show_book':
-                    if(isset($request["bookId"]) && filter_var($request["bookId"], FILTER_VALIDATE_INT) && 
-                       isset($request["retailerId"]) && filter_var($request["retailerId"], FILTER_VALIDATE_INT))
-                    {
-                        //Recupero l'id del libro da mostrare
-                        $bookId = $request["bookId"];
-
-                        //Controllo che il libro sia effettivamente nel catalogo e nel caso lo recupero
-                        $book = BookFactory::findBookViaId($bookId);
-
-                        //Se il libro è stato trovato nel catalogo procedo
-                        if(isset($book))      
-                        {
-                            $retailerId = $request["retailerId"];
-
-                            //Recupero  il numero di copie che il commerciante ha
-                            //disponibili per questo libro
-                            $bookQuantity = BookFactory::getBookQuantityByRetailerId($bookId, $retailerId);
-
-                            /* Se il risultato è >= 0 vuol dire che è tutto ok; altrimenti c'è
-                             * un errore (ad esempio l'id del commerciante non esiste, oppure
-                             * esiste ma il commerciante che risulta non vende questo determinato libro);
-                             * se è tutto ok salvo la quantità disponibile, da visualizzare nella view */
-                            if($bookQuantity >= 0)
-                            {
-                                $book->setQuantity($bookQuantity);
-
-                                //Recupero anche il prezzo del libro stabilito dal commerciante
-                                $book->setPrice(BookFactory::getBookPriceByRetailer($book->getId(), $retailerId));
-
-
-                                //Recupero anche il prezzo dell'offerta che questo commerciante ha di questo libro, 
-                                //qualora esistesse; se non ci fosse, viene settato null
-                                $offerPrice = OfferFactory::getBookOfferPriceByRetailer($book->getId(), $retailerId);
-                            }
-                            else 
-                            {  
-                                //Imposto il libro a null, in modo da mostrare solo il messaggio
-                                //di errore nella view
-                                $book = null;
-
-                                $viewDescriptor->setErrorMessage("Il commerciante in questione non esiste oppure non vende copie di questo libro!");  
-                            }
-                        }
-                        else
-                             $viewDescriptor->setErrorMessage("Il libro specificato non è presente nel catalogo!");     
-                    }
-                    //Se l'id del libro o del commerciante non è stato settato, lo segnalo all'user
-                    else
-                        $viewDescriptor->setErrorMessage("Non è stato specificato un libro o un commerciante!");
-
-                    break;
-                    
                 //Comando per il recupero dei suggerimenti per la barra di ricerca tramite ajax
                 case 'search_suggestions_ajax':
-                    //Controllo che il parametro della search bar passato tramite ajax esista
-                    if(isset($request['searchBar']))
-                    {
-                        //Recupero l'input utente
-                        $inputText = $request['searchBar'];
-                                     
-                        /* $suggestions è il valore che passo al json. E' una unica stringa 
-                         * contenente la lista dei libri; ogni elemento è un link html 
-                         * al corrispondente libro del catalogo */
-                        $suggestions = "";
-
-                        //Recupero la lista dei libri che corrisponde al testo inserito
-                        $occurences = BookFactory::searchBookByName($inputText);
-
-                        
-                        foreach($occurences as $book)
-                        {
-                            /* Inserisco il codice html all'interno della variabile suggestions, in modo da
-                             * mostrare una lista di link. Devo quindi concatenare tutte le stringhe del ciclo 
-                             * in modo tale che il risultato visualizzato sia corretto */
-                            if($suggestions == "")
-                                $suggestions = "<a href='guest/book_by_retailers?bookId=".$book->getId()."' class='suggestion' >".$book->getName()."</a>";
-                            else
-                                $suggestions = $suggestions."</br><a href='guest/book_by_retailers?bookId=".$book->getId()."' class='suggestion' >".$book->getName()."</a>";
-                        }
-                    }
-                    
-                    //Stabilisco che si sta usando ajax; servirà dopo questo switch per richiamare
-                    //la vista ajax
-                    $isAjaxActive = true;
                     
                     break;
 
                 //Caso in cui l'utente abbia effettuato una ricerca avanzata
                 case 'search':
-                    $searchParams = array();
-
-                    //Controllo se sono state trovate corrispondenze
-                    $numberOfResults = $this->searchOccurencesOfAdvancedSearch($request, $viewDescriptor, $searchParams);
-
-                    //Se il risultato è > 0 proseguo con il recupero dei libri trovati
-                    if($numberOfResults > 0)
-                    {
-                        //Setto la pagina dei risultati
-                        $viewDescriptor->setSubPage('search_result');
-
-                        //Infine recupero la lista dei libri trovati, che verrà visualizzata nella view 
-                        $booksFoundList = BookFactory::searchBookAdvanced($searchParams['bookName'], $searchParams['author'], $searchParams['publisher'],
-                                                                          $searchParams['year'], $searchParams['genre']);                
-                    }
-                    else if($numberOfResults == 0)
-                        $viewDescriptor->setErrorMessage("Non sono state trovate corrispondenze.");
 
                     break;
 
                 case 'login':
-                    $username = isset($request['user']) ? $request['user'] : '';
-                    $password = isset($request['password']) ? $request['password'] : '';
-                                        
-                    $this->login($viewDescriptor, $username, $password);
-              
-                    // questa variabile viene poi utilizzata dalla vista
-                    if($this->isLoggedIn())
-                        $user = $_SESSION[self::user];
+//                    $username = isset($request['user']) ? $request['user'] : '';
+//                    $password = isset($request['password']) ? $request['password'] : '';
+//                                        
+//                    $this->login($viewDescriptor, $username, $password);
+//              
+//                    // questa variabile viene poi utilizzata dalla vista
+//                    if($this->isLoggedIn())
+//                        $user = $_SESSION[self::user];
                     break;
                     
                 //Caso in cui il visitatore vuole registrarsi; vale sia per i clienti
@@ -305,98 +251,48 @@ class GuestController extends BaseController
                     {
                         $username = htmlentities($request['username']);
                                                 
-                        if(UserFactory::isUsernameOccupied($username))
-                            $viewDescriptor->setErrorMessage ("Lo username inserito è già in uso da un altro utente.");
-                        else if(isset($request['password']) && $request['password'] != "") 
+//                        if(UserFactory::isUsernameOccupied($username))
+//                            $viewDescriptor->setErrorMessage ("Lo username inserito è già in uso da un altro utente.");
+                        if(isset($request['password']) && $request['password'] != "") 
                         {
                             $password = htmlentities($request['password']);
                             
                             if(isset($request['password2']) && $request['password2'] != "") 
                             {
                                 $password2 = htmlentities($request['password2']);
-                                                                
-                                if(isset($request['name']) && $request['name'] != "") 
+                                                                                            
+                                if(isset($request['email']) && $request['email'] != "") 
                                 {
-                                    $name = htmlentities($request['name']);
-                                    
-                                    if(isset($request['surname']) && $request['surname'] != "") 
-                                    {
-                                        $surname = htmlentities($request['surname']);
-                                        
-                                        if(isset($request['email']) && $request['email'] != "") 
-                                        {
-                                            $email = $request['email'];
-                                            
-                                            if(isset($request['adress']) && $request['adress'] != "") 
-                                            {
-                                                $adress = htmlentities($request['adress']);
-                                                
-                                                if(isset($request['civicNumber']) && $request['civicNumber'] != "")
-                                                {
-                                                    $civicNumber = $request['civicNumber'];
-                                                    
-                                                    if(isset($request['city']) && $request['city'] != "")
-                                                    {
-                                                        $city = htmlentities($request['city']);
-                                                        
-                                                        if(isset($request['cap']) && $request['cap'] != "")
-                                                        {
-                                                            $cap = $request['cap'];
-                                                            
-                                                            //Per accorpare la registrazione di clienti e commercianti, controllo 
-                                                            //l'unica differenza tra loro, per capire con chi ho a che fare
-                                                            if((isset($request['credit']) && $request['credit'] != "") || (isset($request['company']) && $request['company'] != ""))
-                                                            {
-                                                                if(isset($request['credit']))
-                                                                {
-                                                                    $credit = $request['credit'];
-                                                                    $company = null;
-                                                                }
-                                                                else
-                                                                {
-                                                                    $company = htmlentities($request['company']);
-                                                                    $credit = 0;
-                                                                }
-                                                                
-                                                                //Controllo altri eventuali errori nel form col metodo apposito
-                                                                if(!$this->lookForMistakesInForm($password, $password2, $email, $civicNumber, $cap, $credit, $viewDescriptor))
-                                                                {
-                                                                    //Effettuo la registrazione dell'utente vera e propria nel database; 
-                                                                    //il metodo addUser mi ritorna quindi l'utente
-                                                                    $user = UserFactory::addUser($username, $password, $userType, $name, 
-                                                                                                 $surname, $email, $adress, $civicNumber, 
-                                                                                                 $city, $cap, $company, $credit);
-                                                                    
-                                                                    /* Se lo user è null, ci sono stati problemi col database; se non fosse null,
-                                                                     * salvo l'utente in sessione; questo vuol dire che la prossima volta che
-                                                                     * verrà caricata la pagina, verrà mostrata la home dell'utente registrato */
-                                                                    if(isset($user))
-                                                                        $session[BaseController::user] = $user;
-                                                                    else
-                                                                        $viewDescriptor->setErrorMessage("Ci sono stati problemi nella registrazione. Riprovare più tardi.");
-                                                                }
-                                                            }
-                                                            else
-                                                                $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-                                                        }
-                                                        else
-                                                            $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-                                                    }
-                                                    else
-                                                        $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-                                                }
-                                                else
-                                                    $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-                                            }
-                                            else
-                                                $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-                                        }
-                                        else
-                                            $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-                                    }
+                                    $email = $request['email'];
+
+
+                                    $facebook   = new Facebook(array(
+                                        'appId' => self::$FACEBOOK_APP_ID,
+                                        'secret' => self::$FACEBOOK_SECRET_ID,
+                                        'cookie' => true,
+                                    ));
+
+                                    $userFacebookId = $facebook->getUser();
+
+                                    if(!$userFacebookId)
+                                        $userFacebookId = null;
+
+                                //Controllo altri eventuali errori nel form col metodo apposito
+//                                        if(!$this->lookForMistakesInForm($password, $password2, $email, $civicNumber, $cap, $credit, $viewDescriptor))
+//                                        {
+                                    //Effettuo la registrazione dell'utente vera e propria nel database; 
+                                    //il metodo addUser mi ritorna quindi l'utente
+                                    $user = UserFactory::addUser($username, $password, $email, $userFacebookId);
+
+                                    /* Se lo user è null, ci sono stati problemi col database; se non fosse null,
+                                     * salvo l'utente in sessione; questo vuol dire che la prossima volta che
+                                     * verrà caricata la pagina, verrà mostrata la home dell'utente registrato */
+                                    if(isset($user))
+                                        $session[BaseController::user] = $user;
                                     else
-                                        $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-                                }  
+                                        $viewDescriptor->setErrorMessage("Ci sono stati problemi nella registrazione. Riprovare più tardi.");
+//                                        }
+                                }
                                 else
                                     $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
                             }
@@ -419,21 +315,6 @@ class GuestController extends BaseController
         
         $this->showPage($viewDescriptor, $session);
         include_once basename(__DIR__) . '/../view/masterPage.php';
-    }
-
-    
-    private function initializeFacebook()
-    {
-        $appid      = '281784095318774';
-        $appsecret  = "cec392f8e3d40ac5e66e366a85a3730f";
-
-        $facebook   = new Facebook(array(
-            'appId' => $appid,
-            'secret' => $appsecret,
-            'cookie' => true,
-        ));
-        
-        return $facebook;
     }
 
 }

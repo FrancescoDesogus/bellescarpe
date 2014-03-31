@@ -5,6 +5,7 @@ include_once 'controller/BaseController.php';
 //include_once 'controller/CustomerController.php';
 //include_once 'controller/RetailerController.php';
 include_once 'controller/GuestController.php';
+include_once 'controller/UserController.php';
 include_once 'view/ViewDescriptor.php';
 
 
@@ -33,16 +34,29 @@ class FrontController
         //Inizializzo la sessione come prima cosa (o riprendo quella precedente se c'è)
         session_start();
                 
+//        $_SESSION[BaseController::user] = null;
+        
         if(isset($_REQUEST["page"])) 
         {
             switch($_REQUEST["page"]) 
             {
                 case "guest":
-                    
                     //Se si è nella pagina di login, creo il controller di base
                     //per la ricezione degli input
                     $controller = new GuestController();
                     $controller->handleInput($request, $_SESSION);
+                    break;
+                
+                case 'user':
+                    //Se la pagina è della categoria user, creo il controller adeguato
+                    $controller = new UserController();
+                    
+                    $session = &$controller->getSession($request);
+                    
+                    if(!isset($session)) 
+                        self::write403();
+                    
+                    $controller->handleInput($request, $session);
                     break;
 
 //                case 'admin':

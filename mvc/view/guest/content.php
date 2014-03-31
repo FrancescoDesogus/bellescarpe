@@ -23,7 +23,7 @@ switch($viewDescriptor->getSubPage())
         break;
     
     default:
-        include 'subpages/home.php';
+        include 'subpages/prova2.php';
         break; 
 }
 ?>
