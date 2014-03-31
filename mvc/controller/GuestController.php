@@ -7,7 +7,7 @@ include_once basename(__DIR__) . '/../model/Shoe.php';
 include_once basename(__DIR__) . '/../model/ShoeFactory.php';
 include_once 'BaseController.php';
 
-include_once basename(__DIR__) . '/../../facebook-php-sdk/facebook.php';
+//include_once basename(__DIR__) . '/../../facebook-php-sdk/facebook.php';
 
 
 

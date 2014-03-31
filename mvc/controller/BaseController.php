@@ -35,7 +35,7 @@ class BaseController
      * 
      * @return array
      */
-    public function &getSession() 
+    public function &getSession($pRequest) 
     {
         return $_SESSION;
     }

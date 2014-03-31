@@ -21,15 +21,12 @@ include_once basename(__DIR__) . '/../Settings.php';
         <base href="<?= Settings::getApplicationPath() ?>"/>
         <meta name="keywords" content="bellescarpe" />
         <meta name="description" content="Negozio di scarpe" />
-        <link rel="shortcut icon" href="../images/favicon.ico" />
-        <script type="text/javascript" src="../js/jquery-2.0.3.js"></script>
-        <script type="text/javascript" src="../js/jquery-ui.js"></script>
-        <link rel="stylesheet" href="../css/stile.css">
-        <link href="../css/fixed.css" rel="stylesheet" type="text/css" media="screen" />
-        
-        
+        <link rel="stylesheet" href="../css/owl.carousel.css">
+
+        <!-- Default Theme -->
+        <link rel="stylesheet" href="../css/owl.theme.css">
         <link rel="stylesheet" href="../css/bootstrap.css">
-        <link rel="stylesheet" href="../css/blueimp-gallery.min.css">
+        <link rel="stylesheet" href="../css/demo.css">
         
 
     </head>
@@ -41,7 +38,6 @@ include_once basename(__DIR__) . '/../Settings.php';
                 <div id="headerContent">
                     <div id="website_logo">
                         <a id="back_to_top">
-                            <h1>BelleScarpe.com</h1>
                         </a>
                     </div>
 

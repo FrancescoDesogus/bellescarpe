@@ -97,48 +97,70 @@
 //     }
 //     
      ?>
-
-  <body>
-
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-        <div id="gallery_container">
-           <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
-               <div class="slides"></div>
-               <h2 class="title"></h2>
-               <a class="play-pause"></a>
-               <!--<ol class="indicator"></ol>-->
-           </div>
-       </div>
+<body>
     
-    <div class="indicator-slides">
-        <ol class="carousel-indicators">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-            <li data-target="#myCarousel" data-slide-to="1" class=""></li>
-            <li data-target="#myCarousel" data-slide-to="2" class=""></li>
-        </ol>
-    </div>
+    <nav class="yamm navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Brand</a>
+          </div>
 
-    <div class="container">
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle glyphicon glyphicon-search" data-toggle="dropdown"></a>
+                <ul class="dropdown-menu">
+                  <li>
+                      <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Search">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                     </div>
+                  </form>
+                  </li>
+                </ul>
+              </li>
+              
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle glyphicon glyphicon-user" data-toggle="dropdown"></a>
+                <ul class="dropdown-menu">
+                  <li>
+                      <form class="navbar-form navbar-right" role="form">
+                    <div class="form-group">
+                      <input type="text" placeholder="Email" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <input type="password" placeholder="Password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">Sign in</button>
+                  </form>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+      </nav>
+        
+       <div id="owl-example" class="owl-carousel">
+        <div class="item"> <img src="../site_images/apple.jpg" width="400px">  </div>
+        <div class="item"> <img src="../site_images/banana.jpg" width="400px"> </div>
+        <div class="item"> <img src="../site_images/orange.jpg" width="400px"> </div>
+        <div class="item"> <img src="http://farm4.static.flickr.com/3675/13408578274_b27808d172_c.jpg" width="400px"> </div>
+        <div class="item"> <img src="http://farm4.static.flickr.com/3786/13406912874_ce914ea564_c.jpg" width="400px"> </div>
+        <div class="item video"> <iframe src="//www.youtube.com/embed/SpfMceJDjL4" frameborder="0" allowfullscreen></iframe> </div>
+       </div>
+        
+        <div class="container">
       <!-- Example row of columns -->
       <div class="row">
         <div class="col-md-4">
@@ -164,54 +186,27 @@
         <p>&copy; Company 2014</p>
       </footer>
     </div> <!-- /container -->
+        
 
+        
+        <!--  jQuery 1.7+  -->
         <script src="../js/jquery-2.0.3.js"></script>
-        <script src="../js/bootstrap.js"></script>
-        <script src="../js/blueimp-gallery.min.js"></script>
-        <script src="../js/blueimp-gallery-youtube.js"></script>
-                    <script>
-blueimp.Gallery([
-        {
-            title: 'Apple',
-            href: '../site_images/apple.jpg',
-            type: 'image/jpg',
-            thumbnail: '../img/banana_thumb.jpg'
-        },
-        {
-            title: 'Orange',
-            href: '../site_images/orange.jpg',
-            type: 'image/jpg'
-        },
-        {
-            title: 'Banana',
-            href: '../site_images/banana.jpg',
-            type: 'image/jpg'
-        },
-        {
-            title: 'Immagine 1',
-            href: 'http://farm4.static.flickr.com/3675/13408578274_b27808d172_c.jpg',
-            type: 'image/jpg'
-        },
-        {
-            title: 'Immagine 2',
-            href: 'http://farm4.static.flickr.com/3786/13406912874_ce914ea564_c.jpg',
-            type: 'image/jpg'
-        },
-        {
-            title: 'Immagine 3',
-            href: 'http://farm4.static.flickr.com/3710/13409099245_fc8598d5b4_c.jpg',
-            type: 'image/jpg'
-        },
-        {
-            title: 'A YouYube video',
-            href: 'https://www.youtube.com/watch?v=SpfMceJDjL4',
-            type: 'text/html',
-            youtube: 'SpfMceJDjL4',
-            poster: 'https://img.youtube.com/vi/SpfMceJDjL4/0.jpg'
-        }
-    ], {
-        container: '#blueimp-gallery-carousel',
-        carousel: true
-    });
 
-</script>  
+        <!-- Include js plugin -->
+        <script src="../js/owl.carousel.min.js"></script>
+        <script src="../js/bootstrap.js"></script>
+        <script>
+            $(document).ready(function() {
+ 
+            $("#owl-example").owlCarousel({
+                navigation : true, // Show next and prev buttons
+                slideSpeed : 300,
+                paginationSpeed : 400,
+                singleItem:true,                
+                autoHeight: true
+            });
+
+          });
+        </script>
+
+    </body>
