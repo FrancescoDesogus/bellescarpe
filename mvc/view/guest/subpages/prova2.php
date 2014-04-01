@@ -5,7 +5,7 @@
         <input type="hidden" name="cmd" value="login"/>
     
         <br>
-        <label for="user"><strong>Username: </strong></label>
+        <label for="user"><strong>Username o email: </strong></label>
         <input class="inputBar" type="text" name="user" id="user"/>
         <br>
         <br>

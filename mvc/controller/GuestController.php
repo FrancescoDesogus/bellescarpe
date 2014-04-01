@@ -1,8 +1,8 @@
 <?php
 
 include_once basename(__DIR__) . '/../view/ViewDescriptor.php';
-//include_once basename(__DIR__) . '/../model/User.php';
-//include_once basename(__DIR__) . '/../model/UserFactory.php';
+include_once basename(__DIR__) . '/../model/User.php';
+include_once basename(__DIR__) . '/../model/UserFactory.php';
 include_once basename(__DIR__) . '/../model/Shoe.php';
 include_once basename(__DIR__) . '/../model/ShoeFactory.php';
 include_once 'BaseController.php';
@@ -88,6 +88,7 @@ class GuestController extends BaseController
                         'secret' => self::$FACEBOOK_SECRET_ID,
                         'cookie' => true,
                     ));
+
                                         
                     /* Creo i parametri da usare per poter recuperare la url per il login con Facebook, passando l'id dell'app, i dati che si richiederà 
                      * all'utente di utilizzare (in questo caso solo l'email, oltre i valori di default come nome, cognome ecc.), e il link a cui Facebook
@@ -198,16 +199,17 @@ class GuestController extends BaseController
                                 $email = $user_profile["email"];
                             }
                         }
-                        //Da fare: gestire l'errore
+                        //Da fare: gestire meglio l'errore
                         else
                             echo "C'è stato qualche problema... non è stato possibile recuperare l'id facebook dell'utente";
                     }
+                    //Altrimenti, se il login non era da fare tramite facebook, lo faccio alla vecchia maniera
                     else
                     {
+                        //Recupero username (o email) e password dalla richiesta, o ci metto stringhe vuote per evitare errori
                         $username = isset($request['user']) ? $request['user'] : '';
                         $password = isset($request['password']) ? $request['password'] : '';
 
-//                        $this->login($viewDescriptor, $username, $password);
                         
                         //Controllo i dati inseriti corrispondono ad un utente
                         $user = UserFactory::loadUser($username, $password);
@@ -227,18 +229,17 @@ class GuestController extends BaseController
                         //Altrimenti inserisco un errore da far apparire nella pagina di login e la ricarico
                         else 
                         {
-                            $pViewDescriptor->setErrorMessage("Utente sconosciuto o password errata");
+                            $viewDescriptor->setErrorMessage("Utente sconosciuto o password errata");
                             $this->showPage($viewDescriptor, $session);
                         }
                     }
                   
                     break;
                     
-                //Caso in cui il visitatore vuole registrarsi; vale sia per i clienti
-                //che per i commercianti
+                //Caso in cui il visitatore vuole registrarsi
                 case 'register':                    
-                    //Se il visitatore vuole registrarsi, mi assicuro che tutti i campi
-                    //siano occupati e plausibili prima di effettuare la registrazione
+                    //Se il visitatore vuole registrarsi, mi assicuro che tutti i campi siano occupati e plausibili prima di effettuare la registrazione.
+                    //La validazione viene fatta anche tramite ajax, quindi questo è solo per maggiore sicurezza
                     if(!isset($request['username']) || $request['username'] == "" || UserFactory::isUsernameOccupied($request['username'])) 
                     {
                         $viewDescriptor->setErrorMessage("Il campo dello username non è valido o è già in uso");
@@ -255,120 +256,72 @@ class GuestController extends BaseController
                     {
                         $viewDescriptor->setErrorMessage("L'email inserita non è valida o è già in uso da un account");
                     }
+                    //Se non è nessuno dei casi qua sopra, i dati sono ok e quindi si può procedere alla registrazione
                     else
                     {
+                        //Recupero i vari campi del form
                         $username = htmlentities($request['username']);
                         $password = htmlentities($request['password']);
                         $password2 = htmlentities($request['password2']);
                         $email = $request['email'];      
 
-
+                        /* La registrazione può essere fatta usando i dati di facebook; in tal caso, l'account sarebbe legato a Facebook, quindi mi serve
+                         * salvarmi l'eventuale id facebook dell'utente. Per farlo, creo un oggetto Facebook col quale posso controllare se l'utente è attualmente
+                         * connesso al sito tramite facebook */
                         $facebook   = new Facebook(array(
                             'appId' => self::$FACEBOOK_APP_ID,
                             'secret' => self::$FACEBOOK_SECRET_ID,
                             'cookie' => true,
                         ));
 
+                        //Recupero l'id facebook dell'utente, se presente
                         $userFacebookId = $facebook->getUser();
 
+                        //Se il risultato era false, imposto l'id su null
                         if(!$userFacebookId)
                             $userFacebookId = null;
+                        
 
-                        //Effettuo la registrazione dell'utente vera e propria nel database; 
-                        //il metodo addUser mi ritorna quindi l'utente
+                        //Effettuo la registrazione dell'utente vera e propria nel database; il metodo addUser ritorna quindi l'utente
                         $user = UserFactory::addUser($username, $password, $email, $userFacebookId);
 
-                        /* Se lo user è null, ci sono stati problemi col database; se non fosse null,
-                         * salvo l'utente in sessione; questo vuol dire che la prossima volta che
-                         * verrà caricata la pagina, verrà mostrata la home dell'utente registrato */
+                        /* Se l'utente è null, ci sono stati problemi col database; se è null, salvo l'utente in sessione; questo vuol dire che la 
+                         * prossima volta che verrà caricata la pagina, verrà mostrata la home dell'utente registrato */
                         if(isset($user))
                             $session[BaseController::user] = $user;
                         else
                             $viewDescriptor->setErrorMessage("Ci sono stati problemi nella registrazione. Riprovare più tardi.");
-                         
                     }
                     
-                    
-//                    //Se il visitatore vuole registrarsi, mi assicuro che tutti i campi
-//                    //siano occupati e plausibili prima di effettuare la registrazione
-//                    if(isset($request['username']) && $request['username'] != "") 
-//                    {
-//                        $username = htmlentities($request['username']);
-//                                                
-////                        if(UserFactory::isUsernameOccupied($username))
-////                            $viewDescriptor->setErrorMessage ("Lo username inserito è già in uso da un altro utente.");
-//                        if(isset($request['password']) && $request['password'] != "") 
-//                        {
-//                            $password = htmlentities($request['password']);
-//                            
-//                            if(isset($request['password2']) && $request['password2'] != "") 
-//                            {
-//                                $password2 = htmlentities($request['password2']);
-//                                                                                            
-//                                if(isset($request['email']) && $request['email'] != "") 
-//                                {
-//                                    $email = $request['email'];
-//
-//
-//                                    $facebook   = new Facebook(array(
-//                                        'appId' => self::$FACEBOOK_APP_ID,
-//                                        'secret' => self::$FACEBOOK_SECRET_ID,
-//                                        'cookie' => true,
-//                                    ));
-//
-//                                    $userFacebookId = $facebook->getUser();
-//
-//                                    if(!$userFacebookId)
-//                                        $userFacebookId = null;
-//
-//                                //Controllo altri eventuali errori nel form col metodo apposito
-////                                        if(!$this->lookForMistakesInForm($password, $password2, $email, $civicNumber, $cap, $credit, $viewDescriptor))
-////                                        {
-//                                    //Effettuo la registrazione dell'utente vera e propria nel database; 
-//                                    //il metodo addUser mi ritorna quindi l'utente
-//                                    $user = UserFactory::addUser($username, $password, $email, $userFacebookId);
-//
-//                                    /* Se lo user è null, ci sono stati problemi col database; se non fosse null,
-//                                     * salvo l'utente in sessione; questo vuol dire che la prossima volta che
-//                                     * verrà caricata la pagina, verrà mostrata la home dell'utente registrato */
-//                                    if(isset($user))
-//                                        $session[BaseController::user] = $user;
-//                                    else
-//                                        $viewDescriptor->setErrorMessage("Ci sono stati problemi nella registrazione. Riprovare più tardi.");
-////                                        }
-//                                }
-//                                else
-//                                    $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-//                            }
-//                            else
-//                                $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-//                        }
-//                        else
-//                            $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-//                    }
-//                    else
-//                        $viewDescriptor->setErrorMessage("Almeno un campo del form è vuoto.");
-                              
                     break;
                     
-                //Comando per il recupero dei suggerimenti per la barra di ricerca tramite ajax
-                case 'username_validation_ajax':
-                    //Controllo che il parametro della search bar passato tramite ajax esista
+                //Comando per la validazione del form di registrazione tramite ajax
+                case 'registration_form_validation_ajax':
+                    //Controllo che il parametro della search bar passato tramite ajax esista; questo parametro conterrà tutti i valori di ogni campo del form,
+                    //strutturati nella forma 'username=ciao&password=&password2=prova&email='
                     if(isset($request['form_fields']))
                     {
+                        /* Con la funzione parse_str si trasforma una stringa del tipo "username=ciao&password=boh" in un array associativo che contiene
+                         * tutte le informazioni strutturate come $array['username'] -> ciao. Alla funzione passo quindi la stringa e l'array in cui inserirà
+                         * i vari risultati */
                         parse_str($request['form_fields'], $form_fields);
                         
+                        //Recupero tutti i risultati
+                        $username = $form_fields['username'];
+                        $password = $form_fields['password'];
+                        $password2 = $form_fields['password2'];
+                        $email = $form_fields['email'];
+                        
+                        //Setto le variabili che conterranno eventuali messaggi di errore come stringhe vuote e setto il boolenao su true per indicare che
+                        //il form è tutto a posto
                         $isValidationOk = true;
                         $usernameMessage = '';
                         $passwordMessage = '';
                         $password2Message = '';
                         $emailMessage = '';
                         
-                        $username = $form_fields['username'];
-                        $password = $form_fields['password'];
-                        $password2 = $form_fields['password2'];
-                        $email = $form_fields['email'];
                         
+                        //Inizio a controllare tutti campi
                         if($username == '')
                         {
                             $isValidationOk = false;
@@ -415,27 +368,7 @@ class GuestController extends BaseController
                             $emailMessage = "L'email è già registrata al sito, fill'e bagassa";
                         }
                         
-//                        //Recupero l'input utente
-//                        $inputText = $request['username'];
-//                                     
-//                        /* $suggestions è il valore che passo al json. E' una unica stringa 
-//                         * contenente la lista dei libri; ogni elemento è un link html 
-//                         * al corrispondente libro del catalogo */
-//                        $formFieldMessage = "";
-//                        
-//                        $formFieldId = "form_username";
-//                        
-//                        $formFieldMessageId = "validation_username_info";
-//
-//                        //Recupero la lista dei libri che corrisponde al testo inserito
-//                        $isValidationOk = !UserFactory::isUsernameOccupied($inputText);
-//
-//                        if(!$isValidationOk)
-//                        {
-//                            $formFieldMessage = "poba, username occupato bitch";
-//                        }
-                        //Stabilisco che si sta usando ajax; servirà dopo questo switch per richiamare
-                        //la vista ajax
+                        //Terminato il controllo, stabilisco che ajax è attivo in modo che venga caricata la pagina php relativa ad ajax e non la pagina intera
                         $isAjaxActive = true;
                     } 
                     
@@ -447,12 +380,7 @@ class GuestController extends BaseController
             }
         } 
         
-//        $this->showPage($viewDescriptor, $session);
-//        include_once basename(__DIR__) . '/../view/masterPage.php';
-        
-        
-        //Controllo se ajax è attivo; in tal caso invece di caricare la pagina vera e propria
-        //devo caricare la pagina specifica per ajax
+        //Controllo se ajax è attivo; in tal caso invece di caricare la pagina vera e propria devo caricare la pagina specifica per ajax
         if($isAjaxActive) 
             include_once basename(__DIR__) . '/../view/guest/subpages/ajax_form_validation.php';
         else 

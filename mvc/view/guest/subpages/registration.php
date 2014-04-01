@@ -5,31 +5,28 @@
     //Creo la funzione per ajax che si attivi quando il documento è pronto
     $(document).ready(function() {
         
-        //Ogni volta che l'utente preme un tasto e lo molla, viene avviata la funzione
-//        $("#registration_form").click(function(e) {
-        $("#registration_button").click(function(e) {
+        //Avvio la validazione tramite ajax quando si preme il bottone per la conferma della registrazione
+        $("#registration_button").click(function(event) {
+
+            //Prevento l'esecuzione normale dell'evento
+            event.preventDefault();
 
             
-            e.preventDefault();
-
-            console.log("prevented default");
-            
+            //Serializzo i valori del form; il risultato sarà una stringa che conterrà tutti i valori e che sarà strutturata del tipo:
+            //'username=ciao&password=&password2=prova&email='
             var form = $("#registration_form").serialize();
             
-                        
-            //Recupero il testo presente nella barra al momento della pressione del tasto
-//            username_text = $("#form_username").val(); 
 
-            //Avvio la funzione specifica
+            //Avvio la funzione specifica per ajax
             $.ajax({
                 //Specifico l'url
                 url: "index.php?page=guest",
                 type: "POST",
                 
-                //Specifico i dati da passare al server; in questo caso sono
-                //il comando per la ricerca ed il contenuto della search bar
+                //Specifico i dati da passare al server; in questo caso sono il comando per la validazione tramita ajax (processata nel GuesController)
+                //e la stringa serializzata contenente i valori del form
                 data: {
-                  cmd: "username_validation_ajax", 
+                  cmd: "registration_form_validation_ajax", 
                   form_fields: form
                 },
                 
@@ -38,8 +35,6 @@
                 
                 //Definisco la funzione da chiamare in caso di successo
                 success: function(data, state) {
-
-                    console.log($("#registration_form").serialize());
                     showFormFieldValidation(data);
                 },
                 
@@ -50,29 +45,27 @@
         });
 
 
-        //Funzione che si occupa di mostrare i suggerimenti, ricevuti nella forma di json
+        //Funzione che si occupa di mostrare eventuali errori dovuti alla validazione o di eseguire il submit del form se era tutto ok
         function showFormFieldValidation(json)
         {
-            //Definisco il nuovo codice html da mostrare nel div situato sotto
-            //la search bar. Il valore contenuto nel json è già pronto con
-            //il codice html contenente i nomi ed i link ai rispettivi libri suggeriti
-            
-            
-            
+            //Il json ricevuto tramite ajax contiene un booleano che indica se il form era ok; in tal caso, faccio il submit del form
             if(json.isValidationOk)
-            {
                 $("#registration_form").submit();
-
-//                window.location = "index.php?page=guest&subpage=registration&cmd=register";
-            }
+            //Altrimenti, procedo col mostare tutti gli errori
             else
             {
+                //Se il messaggio di errore relativo a ciascun campo non è vuoto, allora vuol dire che non andava bene e quindi bisogna mostrare
+                //il relativo messaggio di errore
                 if(json.usernameMessage != '')
                 {
+                    //Coloro il relativo form di rosso
                     $('#form_username').css("background-color", "red");
+                    
+                    //Setto il messaggio di errore e lo mostro, qualora fosse invisibile
                     $('#validation_username_message').text(json.usernameMessage);
                     $('#validation_username_message').show();
                 }
+                //Se altrimenti il campo andava bene, lo coloro di verde e nascondo l'eventuale messaggio di errore che c'era prima
                 else
                 {
                     $('#form_username').css("background-color", "green");

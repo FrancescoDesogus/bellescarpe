@@ -38,7 +38,8 @@ class UserController extends BaseController
         if($this->isLoggedIn()) 
         {       
             //Recupero l'utente
-            $user = $session[BaseController::user];        
+            $user = $session[BaseController::user]; 
+            
             
             /* Controllo a quale sotto pagina corrisponde
              * la pagina da visualizzare, per settare il viewDescriptor
@@ -73,7 +74,6 @@ class UserController extends BaseController
                 {
                     //Comando per il logout
                     case 'logout':
-                        
                         //Uso il metodo apposito e concludo la funzione del controller
                         $this->logout($viewDescriptor);
                                                 

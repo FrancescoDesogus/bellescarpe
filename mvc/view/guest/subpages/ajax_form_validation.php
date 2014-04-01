@@ -5,13 +5,7 @@ header('Content-type: application/json');
 
 $json = array();
 
-//Salvo i suggerimenti nel campo specificato dell'array associativo che
-//"simula" un json
-//$json["isValidationOk"] = $isValidationOk;
-//$json["formFieldId"] = $formFieldId;
-//$json["formFieldMessageId"] = $formFieldMessageId;
-//$json["formFieldMessage"] = $formFieldMessage;
-
+//Salvo i valori risultanti dalla validazione nei rispettivi campi dell'array associativo che "simula" un json e che verrà restituito da ajax
 $json["isValidationOk"] = $isValidationOk;
 $json["usernameMessage"] = $usernameMessage;
 $json["passwordMessage"] = $passwordMessage;

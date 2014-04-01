@@ -29,9 +29,15 @@ class UserFactory
         //Se la variabile è settata non ci sono stati errori
         if(isset($mysqli))
         {
+            //Controllo se il valore inserito è una email; in tal caso cerco nel db per l'email inserita, altrimenti ricerco nella colonna degli username
+            if(!filter_var($username, FILTER_VALIDATE_EMAIL))
+                $column = "username";
+            else
+                $column = "email";
+            
             /* Dato che il login è a rischio di SQL injection, creo un prepared
              * statement per la query per evitare possibili attacchi */
-            $query = "SELECT * FROM Utente WHERE username = ? AND password = ?";
+            $query = "SELECT * FROM Utente WHERE $column = ? AND password = ?";
             
             $statement = $mysqli->stmt_init();   
             
