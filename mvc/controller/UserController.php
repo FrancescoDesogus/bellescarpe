@@ -2,18 +2,14 @@
 
 include_once 'BaseController.php';
 include_once basename(__DIR__) . '/../model/UserFactory.php';
-//include_once basename(__DIR__) . '/../model/BookFactory.php';
-//include_once basename(__DIR__) . '/../model/OrderFactory.php';
+include_once basename(__DIR__) . '/../model/ShoeFactory.php';
+include_once basename(__DIR__) . '/../model/Shoe.php';
 
 /**
  * Classe che gestisce gli input di un utente di tipo cliente
  */
 class UserController extends BaseController 
 {
-    //Costanti usate nell'array di sessione
-    const BASKET = 'basket';
-    const BASKET_COUNT = 'basketCount';
-
     //Costruttore
     public function __construct() 
     {
@@ -52,7 +48,6 @@ class UserController extends BaseController
             
             if(isset($request["subpage"])) 
             {
-                echo "no, non sono qua".$request["subpage"]."<br>";
                 
                 switch($request["subpage"]) 
                 {
@@ -78,20 +73,16 @@ class UserController extends BaseController
                 {
                     //Comando per il logout
                     case 'logout':
-                        //Uso il metodo apposito e concluco la funzione del controller
+                        
+                        //Uso il metodo apposito e concludo la funzione del controller
                         $this->logout($viewDescriptor);
                                                 
                         $controller = new GuestController();
                         
                         //Brutta cosa
                         $request["subpage"] = "prova2";
+
                         
-//                        unset($_SESSION['user']);   
-//                        unset($_SESSION['fb_{'.GuestController::$FACEBOOK_APP_ID.'}_code']);   
-//                        unset($_SESSION['fb_{'.GuestController::$FACEBOOK_APP_ID.'}_access_token']);   
-//                        unset($_SESSION['fb_{'.GuestController::$FACEBOOK_APP_ID.'}_user_id']);   
-//                        header("Location:index.php");   
-                                                
                         $controller->handleInput($request, $session);
                     
                         return;
@@ -111,30 +102,6 @@ class UserController extends BaseController
         $this->showPage($viewDescriptor, $session);
         include_once basename(__DIR__) . '/../view/masterPage.php';
     }
-    
-    /** Controlla se il libro specificato è presente nel carrello. 
-     * 
-     * @param Book $pBook
-     * @param array $pBasket
-     * 
-     * @return $counter (l'indice in cui è presente il libro nel carrello) in caso
-     *         di corrispondenza, -1 altrimenti 
-     */
-    private function isBookInBasket(Book $pBook, $pBasket)
-    {
-        $counter = 0;
-        
-        foreach($pBasket as $book)
-        {
-            if($book->getId() == $pBook->getId() && $book->getRetailerId() == $pBook->getRetailerId())
-                return $counter;   
-            
-            $counter++;
-        }
-        
-        return -1;
-    }
-    
     
 
     /**
