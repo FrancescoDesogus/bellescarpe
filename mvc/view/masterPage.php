@@ -25,9 +25,9 @@ include_once basename(__DIR__) . '/../Settings.php';
 
         <!-- Default Theme -->
         <link rel="stylesheet" href="../css/owl.theme.css">
-        <link rel="stylesheet" href="../css/bootstrap.css">
-        <link rel="stylesheet" href="../css/demo.css">
-        
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="../css/demo.css">        
 
     </head>
     <body>

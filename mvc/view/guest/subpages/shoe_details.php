@@ -97,59 +97,34 @@
 //     }
 //     
      ?>
-<body>
-    
-    <nav class="yamm navbar navbar-default" role="navigation">
-        <div class="container-fluid">
-          <!-- Brand and toggle get grouped for better mobile display -->
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Brand</a>
-          </div>
 
-          <!-- Collect the nav links, forms, and other content for toggling -->
-          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            
-            <ul class="nav navbar-nav navbar-right">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle glyphicon glyphicon-search" data-toggle="dropdown"></a>
-                <ul class="dropdown-menu">
-                  <li>
-                      <form class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Search">
-                    <button type="submit" class="btn btn-default">Submit</button>
-                     </div>
-                  </form>
-                  </li>
-                </ul>
-              </li>
-              
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle glyphicon glyphicon-user" data-toggle="dropdown"></a>
-                <ul class="dropdown-menu">
-                  <li>
-                      <form class="navbar-form navbar-right" role="form">
-                    <div class="form-group">
-                      <input type="text" placeholder="Email" class="form-control">
-                    </div>
-                    <div class="form-group">
-                      <input type="password" placeholder="Password" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-success">Sign in</button>
-                  </form>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
-      </nav>
+<body>    
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle glyphicon glyphicon-user" id="utente" data-toggle="collapse" data-target="#links"></button>
+            <button type="button" class="navbar-toggle glyphicon glyphicon-search" id="ricerca" data-toggle="collapse" data-target="#search"></button> 
+            <a class="navbar-brand" href="#">Brand</a>
+        </div>
+        <ul class="collapse navbar-collapse nav navbar-nav" id="links">
+            <form class="navbar-form navbar-right" role="form">
+                <div class="form-group">
+                    <input type="text" placeholder="Email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+        </ul>
+        <div class="collapse navbar-collapse" id="search">
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </nav>
         
        <div id="owl-example" class="owl-carousel">
         <div class="item"> <img src="../site_images/apple.jpg" width="400px">  </div>
@@ -194,19 +169,49 @@
 
         <!-- Include js plugin -->
         <script src="../js/owl.carousel.min.js"></script>
-        <script src="../js/bootstrap.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
         <script>
             $(document).ready(function() {
  
-            $("#owl-example").owlCarousel({
-                navigation : true, // Show next and prev buttons
-                slideSpeed : 300,
-                paginationSpeed : 400,
-                singleItem:true,                
-                autoHeight: true
+                $("#owl-example").owlCarousel({
+                    navigation : true, // Show next and prev buttons
+                    slideSpeed : 300,
+                    paginationSpeed : 400,
+                    singleItem:true,                
+                    autoHeight: true
+                });
             });
-
-          });
         </script>
+        
+            <script type='text/javascript'>//<![CDATA[ 
+        $(document).ready(function () {
+            
+            $('#ricerca').on('click', function () {
+                console.log("ricerca")
+              var actives = $('.navbar').find('.collapse.in'),
+                   hasData;
+                   
+               if (actives && actives.length) {
+                   hasData = actives.data('collapse')
+                   if (hasData && hasData.transitioning) return
+                   actives.collapse('hide')
+                   hasData || actives.data('collapse', null)
+               }
+           });
+           
+           $('#utente').on('click', function () {
+               console.log("utente")
+               var actives = $('.navbar').find('.collapse.in'),
+                   hasData;
+                   
+               if (actives && actives.length) {
+                   hasData = actives.data('collapse')
+                   if (hasData && hasData.transitioning) return
+                   actives.collapse('hide')
+                   hasData || actives.data('collapse', null)
+               }
+           });
+        });//]]>  
+    </script>
 
     </body>
