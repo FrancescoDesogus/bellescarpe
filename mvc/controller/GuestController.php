@@ -72,8 +72,36 @@ class GuestController extends BaseController
                 //Caso in cui bisogna mostrare il catalogo
                 case 'shoe_details':                 
                     $viewDescriptor->setSubPage('shoe_details');
+                    
+                    if(isset($request["id"]) && filter_var($request["id"], FILTER_VALIDATE_INT)) 
+                    {
+                        $shoe = ShoeFactory::getShoeFromId($request["id"]);
+                    
+                    
+                        $result = glob(basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/*.*');
 
-                    $shoe = ShoeFactory::getShoeFromId(1);
+                        for($i = 0; $i < $result.length; $i++)
+                        {
+                            $result[$i] = str_replace(basename(__DIR__) . '/../', "", $result[$i]);
+                        }
+                                                
+                        $video_links_txt = basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/video_links.txt';
+                        $fileHandle = fopen($video_links_txt, 'r');
+                        
+                        
+                        $video_links = null;
+                        
+                        while($link = fgets($fileHandle))
+                        {
+                            $video_links[] = $link;
+                        }
+                        
+                        fclose($fh);
+                        
+                    }
+                    else
+                        $viewDescriptor->setErrorMessage("Id della scarpa non valido!");
+                    
                     
                     break;
                 

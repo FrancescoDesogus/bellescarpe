@@ -125,15 +125,33 @@
             </form>
         </div>
     </nav>
-        
-       <div id="owl-example" class="owl-carousel">
-        <div class="item"> <img src="../site_images/apple.jpg" width="400px">  </div>
-        <div class="item"> <img src="../site_images/banana.jpg" width="400px"> </div>
-        <div class="item"> <img src="../site_images/orange.jpg" width="400px"> </div>
-        <div class="item"> <img src="http://farm4.static.flickr.com/3675/13408578274_b27808d172_c.jpg" width="400px"> </div>
-        <div class="item"> <img src="http://farm4.static.flickr.com/3786/13406912874_ce914ea564_c.jpg" width="400px"> </div>
-        <div class="item video"> <iframe src="//www.youtube.com/embed/SpfMceJDjL4" frameborder="0" allowfullscreen></iframe> </div>
+    
+        <div id="owl-example" class="owl-carousel">
+            <?php
+            if(isset($video_links) && count($video_links) > 0)
+            {
+                foreach($video_links as $link)
+                {
+            ?>
+                    <div class="item video"> <?= $link?> </div>
+            <?php
+                }
+            }
+            ?>
+            
+            <?php
+            if(isset($result) && count($result) > 0)
+            {
+                foreach($result as $filename)
+                {
+            ?>
+                    <div class="item"> <img src="<?= $filename ?>" width="400px">  </div>
+            <?php
+                }
+            }
+            ?>
        </div>
+
         
         <div class="container">
       <!-- Example row of columns -->
