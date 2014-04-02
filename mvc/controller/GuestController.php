@@ -79,16 +79,22 @@ class GuestController extends BaseController
                         //Recuero la scarpa con quell'id, se è presente
                         $shoe = ShoeFactory::getShoeFromId($request["id"]);
                     
-                        //Controllo se è stata trovata una scopra
+                        //Controllo se è stata trovata una scarpa e nel caso procedo, altrimenti mostro un errore
                         if(isset($shoe))
                         {
-                            $result = glob(basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/*.*');
+                            /* Con la funzione blob recupero tutti i nomi dei file contenuti nel path specificato, compreso il path stesso; serve
+                             * per recuperare i nomi delle immagini della scarpa*/
+                            $imagesPaths = glob(basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/*.jpg');
 
-                            for($i = 0; $i < count($result); $i++)
-                            {
-                                $result[$i] = str_replace(basename(__DIR__) . '/../', "", $result[$i]);
-                            }
+                            /* I path delle immagini sanno strutturati in questo modo "controller/../../shoes_media/" ecc.. Questo è il path corretto per arrivare
+                             * alle immagini partendo dalla cartella del controller; però nella vista del content, dove si usano effettivamente i path,
+                             * i path recuperati non andranno più bene perchè ci si troverà in relazione alla masterpage e da li per raggiungere le immagini
+                             * il path corretto è "../shoes_media/". Quindi dall'array dei risultati tolgo la parte "controller/../" che è in più */
+                            for($i = 0; $i < count($imagesPaths); $i++)
+                                $imagesPaths[$i] = str_replace(basename(__DIR__) . '/../', "", $imagesPaths[$i]);
 
+                            
+                            //Adesso recupero anche i link dei video da mostrare
                             $video_links_txt = basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/video_links.txt';
                             $fileHandle = fopen($video_links_txt, 'r');
 
@@ -113,7 +119,6 @@ class GuestController extends BaseController
                         }
                         else
                             $viewDescriptor->setErrorMessage("Non c'è nessuna scarpa con quell'id");
-                        
                     }
                     else
                         $viewDescriptor->setErrorMessage("Id della scarpa non valido!");

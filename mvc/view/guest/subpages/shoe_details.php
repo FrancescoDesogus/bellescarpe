@@ -29,26 +29,26 @@
     <?php if(isset($shoe)) { ?>
        <div id="owl-example" class="owl-carousel">
             <?php
+            if(isset($imagesPaths) && count($imagesPaths) > 0)
+            {
+                foreach($imagesPaths as $filepath)
+                {
+            ?>
+                    <div class="item slide"> <img src="<?= $filepath ?>" width="400px">  </div>
+            <?php
+                }
+            }
+            ?>
+                    
+            <?php
             if(isset($video_links) && count($video_links) > 0)
             {
                 foreach($video_links as $link)
                 {
             ?>
                     <div class="item video"> 
-                        <div class="js-lazyYT" data-youtube-id="<?= $link?>" data-width="100%" data-height="100%" ></div>
+                        <div class="js-lazyYT" data-youtube-id="<?= $link ?>" data-width="100%" data-height="100%" ></div>
                     </div>
-            <?php
-                }
-            }
-            ?>
-
-            <?php
-            if(isset($result) && count($result) > 0)
-            {
-                foreach($result as $filename)
-                {
-            ?>
-                    <div class="item slide"> <img src="<?= $filename ?>" width="400px">  </div>
             <?php
                 }
             }
