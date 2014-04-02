@@ -147,7 +147,7 @@
                 foreach($result as $filename)
                 {
             ?>
-                    <div class="item"> <img src="<?= $filename ?>" width="400px">  </div>
+                    <div class="item slide"> <img src="<?= $filename ?>" width="400px">  </div>
             <?php
                 }
             }

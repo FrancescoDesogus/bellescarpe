@@ -25,6 +25,13 @@
     border: none;
 }
 
+.item.slide {
+    width: 80%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /*img,
 object {
      max-width: 50%;
