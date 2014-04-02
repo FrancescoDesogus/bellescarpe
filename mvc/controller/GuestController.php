@@ -79,6 +79,7 @@ class GuestController extends BaseController
                         //Recuero la scarpa con quell'id, se è presente
                         $shoe = ShoeFactory::getShoeFromId($request["id"]);
                     
+                        //Controllo se è stata trovata una scopra
                         if(isset($shoe))
                         {
                             $result = glob(basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/*.*');

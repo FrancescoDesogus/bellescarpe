@@ -42,7 +42,8 @@ class Shoe {
     
     
     /*
-     * Lista di taglie disponibili per scarpa, con relativa quantità disponibile (array associativo)
+     * Lista di taglie disponibili per scarpa, con relativa quantità disponibile (array associativo). Può essere null, ad esempio quando si prendono
+     * le scarpe suggerite, in quanto in questi casi non serve sapere le taglie e le quantità disponibili
      */
     private $sizesAndQuantities;
     

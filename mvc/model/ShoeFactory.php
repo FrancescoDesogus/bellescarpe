@@ -96,7 +96,7 @@ class ShoeFactory
         $mediaPath = $row->media;
 
         //Creo quindi l'oggetto Shoe con i dettagli recuperati
-        $shoe = new Shoe($id, $brand, $model, $color, $sex, $price, $category, $sizesAndQuantities, $mediaPath);
+        $shoe = new Shoe($id, $brand, $model, $color, $sex, $price, $category, null, $mediaPath);
         
         return $shoe;
     }
