@@ -31,7 +31,7 @@ class ShoeFactory
                 
                 $mysqli->close();
                 
-                return ShoeFactory::getShoeFromRow($row, $shoeId);
+                return ShoeFactory::getShoeFromRowWithSizes($row, $shoeId);
             }
             else
             {
@@ -54,21 +54,45 @@ class ShoeFactory
      * 
      * @return un oggetto Shoe con le informazioni recuperate dalle query
      */
-    private static function getShoeFromRow($row, $shoeId) 
+    private static function getShoeFromRowWithSizes($row, $shoeId) 
     {
         $id = $row->id_scarpa;
         $brand = $row->marca;
         $model = $row->modello;
         $color = $row->colore;
         $sex=  $row->sesso;
+        $category =  $row->categoria;
         $price = $row->prezzo;
-        
-        //Recupero tutte le categorie della scarpa 
-        $category = ShoeFactory::getCategoriesFromId($shoeId);
+        $mediaPath = $row->media;
         
         //Recupero tutte le taglie disponibili con relativa quantità disponibile
         $sizesAndQuantities = ShoeFactory::getSizesAndQuantitiesFromId($shoeId);
         
+
+        //Creo quindi l'oggetto Shoe con i dettagli recuperati
+        $shoe = new Shoe($id, $brand, $model, $color, $sex, $price, $category, $sizesAndQuantities, $mediaPath);
+        
+        return $shoe;
+    }
+    
+    
+    /**
+     * Metodo di convenienza che estrapola i dati da una riga del database ottenuta con una query per una scarpa, SENZA prendere le taglie e le relative
+     * quantità disponibili
+     * 
+     * @param $row la riga del database restituita da una query
+     * 
+     * @return un oggetto Shoe con le informazioni recuperate dalle query
+     */
+    private static function getShoeFromRow($row) 
+    {
+        $id = $row->id_scarpa;
+        $brand = $row->marca;
+        $model = $row->modello;
+        $color = $row->colore;
+        $sex=  $row->sesso;
+        $category =  $row->categoria;
+        $price = $row->prezzo;        
         $mediaPath = $row->media;
 
         //Creo quindi l'oggetto Shoe con i dettagli recuperati
@@ -161,6 +185,42 @@ class ShoeFactory
         }
         else
             return $sizesAndQuantities;
+    }
+    
+    
+    /**
+     * Recupera le taglie disponibili per la scarpa e le relative quantità disponibili
+     * 
+     * @param $shoeId l'id della scarpa
+     * 
+     * @return un array associativo del tipo "taglia -> quantita_disponibile"
+     */
+    public static function getSuggestions($shoeId, $sex, $category) 
+    {
+        $mysqli = Database::connect();
+        
+        $suggestions = array();
+        
+        if(isset($mysqli))
+        {            
+            $query = "SELECT * FROM Scarpa WHERE id_scarpa != $shoeId AND sesso = '$sex' AND categoria = '$category'";
+
+            $result = $mysqli->query($query);
+            
+            if(Database::checkForErrors($mysqli) && $result->num_rows > 0)
+            {
+                while($row = $result->fetch_object())
+                {      
+                    $suggestions[] = ShoeFactory::getShoeFromRow($row);
+                }
+            }
+            
+            $mysqli->close();
+            
+            return $suggestions;
+        }
+        else
+            return $suggestions;
     }
 }
 

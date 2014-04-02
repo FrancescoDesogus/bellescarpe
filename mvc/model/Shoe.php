@@ -36,9 +36,9 @@ class Shoe {
     private $price;
     
     /**
-     * Le categorie a cui la scarpa appartiene (array)
+     * La categoria a cui la scarpa appartiene (array)
      */
-    private $categories;
+    private $category;
     
     
     /*
@@ -55,7 +55,7 @@ class Shoe {
     /**
      * Costrutture dell'appello
      */
-    public function __construct($id, $brand, $model, $color, $sex, $price, $categories, $sizesAndQuantities, $mediaPath) 
+    public function __construct($id, $brand, $model, $color, $sex, $price, $category, $sizesAndQuantities, $mediaPath) 
     {
         $this->setId($id);
         $this->setBrand($brand);
@@ -63,7 +63,7 @@ class Shoe {
         $this->setColor($color);
         $this->setSex($sex);
         $this->setPrice($price);
-        $this->setCategories($categories);
+        $this->setCategory($category);
         $this->setSizesAndQuantities($sizesAndQuantities);
         $this->setMediaPath($mediaPath);
     }
@@ -181,12 +181,12 @@ class Shoe {
         $this->color = $colore;
     }
     
-    public function getCategories(){
-        return $this->categories;
+    public function getCategory(){
+        return $this->category;
     }
     
-    public function setCategories($categoria){
-        $this->categories = $categoria;
+    public function setCategory($categoria){
+        $this->category = $categoria;
     }
 
      public function getMediaPath(){
@@ -195,6 +195,64 @@ class Shoe {
     
     public function setMediaPath($mediaPath){
         $this->mediaPath = $mediaPath;
+    }
+    
+    
+    public function toString()
+    {
+        echo "Dati della scarpa con id pari a ". $this->getId() . ": <br> <br>";
+
+        echo "Marca = ";
+        echo $this->getBrand();
+        echo "<br>";
+
+        echo "Modello = ";
+        echo $this->getModel();
+        echo "<br>";
+
+        echo "Colore = ";
+        echo $this->getColor();
+        echo "<br>";
+
+        echo "Sesso = ";
+        echo $this->getSex();
+        echo "<br>";
+
+        echo "Prezzo = ";
+        echo $this->getPrice()." euro";
+        echo "<br>";
+
+        echo "Categoria = ";
+        echo $this->getCategory();
+        echo "<br>";
+
+
+        echo "<br>";
+
+
+        //Stampo tutte le taglie presenti del modello, con relativa quantità disponibile per la data misura
+        $sizesAndQuantities = $this->getSizesAndQuantities();
+
+        foreach ($sizesAndQuantities as $size => $quantity) 
+        {
+           echo "Taglia".$size." => Quntita': ".$quantity;
+           echo "<br>";
+        }
+
+
+        //Stampo il path dei media della scarpa; di default è null
+        $mediaPath = $this->getMediaPath();
+
+        echo "MediaPath = ";
+
+        if(isset($mediaPath))
+            echo $mediaPath;
+        else
+            echo "null";
+
+        echo "<br>";
+        echo "<br>";
+        echo "<br>";
     }
 }
 

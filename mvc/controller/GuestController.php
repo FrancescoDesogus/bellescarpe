@@ -73,30 +73,45 @@ class GuestController extends BaseController
                 case 'shoe_details':                 
                     $viewDescriptor->setSubPage('shoe_details');
                     
+                    //Controllo se è stato passato l'id della scarpa da visualizzare e mi assicuro che è un intero
                     if(isset($request["id"]) && filter_var($request["id"], FILTER_VALIDATE_INT)) 
                     {
+                        //Recuero la scarpa con quell'id, se è presente
                         $shoe = ShoeFactory::getShoeFromId($request["id"]);
                     
-                    
-                        $result = glob(basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/*.*');
+                        if(isset($shoe))
+                        {
+                            $result = glob(basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/*.*');
 
-                        for($i = 0; $i < count($result); $i++)
-                        {
-                            $result[$i] = str_replace(basename(__DIR__) . '/../', "", $result[$i]);
+                            for($i = 0; $i < count($result); $i++)
+                            {
+                                $result[$i] = str_replace(basename(__DIR__) . '/../', "", $result[$i]);
+                            }
+
+                            $video_links_txt = basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/video_links.txt';
+                            $fileHandle = fopen($video_links_txt, 'r');
+
+
+                            $video_links = null;
+
+                            while($link = fgets($fileHandle))
+                            {
+                                $video_links[] = $link;
+                            }
+
+                            fclose($fileHandle);
+
+
+
+                            $suggestions = ShoeFactory::getSuggestions($shoe->getId(), $shoe->getSex(), $shoe->getCategory());
+
+                            foreach($suggestions as $s)
+                            {
+    //                            $s->toString();
+                            }
                         }
-                                                
-                        $video_links_txt = basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/video_links.txt';
-                        $fileHandle = fopen($video_links_txt, 'r');
-                        
-                        
-                        $video_links = null;
-                        
-                        while($link = fgets($fileHandle))
-                        {
-                            $video_links[] = $link;
-                        }
-                        
-                        fclose($fileHandle);
+                        else
+                            $viewDescriptor->setErrorMessage("Non c'è nessuna scarpa con quell'id");
                         
                     }
                     else
