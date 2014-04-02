@@ -1,109 +1,9 @@
-<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
-     
-<?php
-     
-//     //Codice per il QR code preso da qua: http://codematrix.altervista.org/archives/1143
-//     require("../phpqrcode/qrlib.php");
-//     
-//     $data = "http://bellescarpecod.altervista.org/mvc/index.php?page=guest&subpage=shoe_detailsaa";
-//     
-//     $filename = 'qrcode'.md5($data.'|'."L".'|'."4").'.png';
-//     
-//     QRcode::png($data, $filename, "L", 4, 2);
-//     
-//     echo '<img src="'.$filename.'" /><hr/>';
-     
-//     
-//     
-//     
-//     echo "Dati della scarpa con id pari a 1: <br> <br>";
-//     
-//     if($shoe == null)
-//     {
-//        echo "Non ci sono scarpe... coddasa?";
-//        
-//     }
-//     else {
-//
-//        //Stampo tutti i dati della scarpa con id = 1
-//        echo "ID = ";
-//        echo $shoe->getId();
-//        echo "<br>";
-//
-//        echo "Marca = ";
-//        echo $shoe->getBrand();
-//        echo "<br>";
-//
-//        echo "Modello = ";
-//        echo $shoe->getModel();
-//        echo "<br>";
-//
-//        echo "Colore = ";
-//        echo $shoe->getColor();
-//        echo "<br>";
-//
-//        echo "Sesso = ";
-//        echo $shoe->getSex();
-//        echo "<br>";
-//
-//        echo "Prezzo = ";
-//        echo $shoe->getPrice()." euro";
-//        echo "<br>";
-//
-//
-//        //Stampo tutte le categorie della scarpa; potrebbero essere più di una
-//        $i = 0;
-//
-//        $categories = $shoe->getCategories();
-//
-//        for($i = 0; $i < count($categories); $i++) 
-//        {
-//           echo "Categoria".($i + 1)." = ";
-//           echo $categories[$i];
-//           echo "<br>";
-//        }
-//
-//        echo "<br>";
-//
-//
-//        //Stampo tutte le taglie presenti del modello, con relativa quantità disponibile per la data misura
-//        $sizesAndQuantities = $shoe->getSizesAndQuantities();
-//
-//        foreach ($sizesAndQuantities as $size => $quantity) 
-//        {
-//           echo "Taglia".$size." => Quntita': ".$quantity;
-//           echo "<br>";
-//        }
-//
-//        echo "<br>";
-//
-//
-//        //Stampo il path dei media della scarpa; di default è null
-//        $mediaPath = $shoe->getMediaPath();
-//
-//        echo "MediaPath = ";
-//
-//        if(isset($mediaPath))
-//            echo "not null";
-//        else
-//            echo "null";
-//
-//        echo "<br>";
-//        echo "<br>";
-//        echo "<br>";
-//        
-//        
-//        
-//     }
-//     
-     ?>
-
-<body>    
+ 
     <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle glyphicon glyphicon-user" id="utente" data-toggle="collapse" data-target="#links"></button>
             <button type="button" class="navbar-toggle glyphicon glyphicon-search" id="ricerca" data-toggle="collapse" data-target="#search"></button> 
-            <a class="navbar-brand" href="#">Brand</a>
+            <a class="navbar-brand" href="#">BelleScarpe</a>
         </div>
         <ul class="collapse navbar-collapse nav navbar-nav" id="links">
             <form class="navbar-form navbar-right" role="form">
@@ -126,6 +26,7 @@
         </div>
     </nav>
         
+    <?php if(isset($shoe)) { ?>
        <div id="owl-example" class="owl-carousel">
             <?php
             if(isset($video_links) && count($video_links) > 0)
@@ -157,20 +58,69 @@
         <div class="container">
       <!-- Example row of columns -->
       <div class="row">
+            <div class="col-md-4">
+                <h2> Dettagli </h2>
+              <table class="table table-striped">
+                  
+                <!--  marca
+                      modello
+                      sesso
+                      colore
+                      categoria -->
+                  
+                  <tbody>
+                      <tr>
+                          <td> <strong> Marca </strong> </td>
+                          <td> <?= $shoe->getBrand() ?> </td>
+                      </tr>
+                      <tr>
+                          <td> <strong> Modello </strong> </td>
+                          <td> <?= $shoe->getModel() ?> </td>
+                      </tr>
+                      <tr>
+                          <td> <strong> Colore </strong> </td>
+                          <td> <?= $shoe->getColor() ?> </td>
+                      </tr>
+                      <tr>
+                          <td> <strong> Categoria </strong> </td>
+                          <td> <?= $shoe->getCategory() ?> </td>
+                      </tr>
+                      <tr>
+                          <td> <strong> Sesso </strong> </td>
+                          <td> <?= $shoe->getSex() ?> </td>
+                      </tr>
+                      <tr>
+                          <td> <strong> Prezzo </strong> </td>
+                          <td> <?= $shoe->getPrice() ?> </td>
+                      </tr>
+                  </tbody>
+                      
+                      
+                </table>
+           </div>
         <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <h2>Taglie</h2>
+          <?php
+          $sizesAndQuantities = $shoe->getSizesAndQuantities();
+          
+          foreach ($sizesAndQuantities as $size => $quantity) 
+          {
+//              $taglia = (float) $size; //metto un cast a float se voglio mostrare anche le cifre decimali, e al contempo mostrare solo
+                                        //la parte intera se la parte decimale è .00
+              $taglia = (int) $size; //elimino la virgola e qualsiasi cosa ci sia dopo
+              
+              if($quantity >= 1) { ?>
+                <button type='button' class='btn selectable_button'> <?= $taglia ?> </button>
+              <?php } else { ?>
+                <button type='button' class='btn' disabled> <?= $taglia ?> </button>
+              <?php } 
+          }
+          
+          ?>
+          
         </div>
         <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <h2>Scarpe Simili</h2>
         </div>
       </div>
 
@@ -180,6 +130,7 @@
         <p>&copy; Company 2014</p>
       </footer>
     </div> <!-- /container -->
+    <?php } ?>
         
 
         
@@ -198,7 +149,8 @@
                     navigation : true, // Show next and prev buttons
                     slideSpeed : 300,
                     paginationSpeed : 400,
-                    singleItem:true,                
+                    singleItem:true,    
+//                    items : 2,
                     autoHeight: true,
                     rewindNav: true,
                     afterMove: moved
@@ -241,12 +193,11 @@
                }
            });
            
-//           $(function(){
-//            $("#frame").on('click', function () { 
-//                $("#frame").attr("src", "http://www.youtube.com/embed/"+ "SpfMceJDjL4" +"?rel=0&autoplay=1");
-//                });
-//          });
+         $('.selectable_button').on('click', function () {
+             console.log("premuto");
+             if($(this).hasClass('btn-success'))
+                 $(this).removeClass('btn-success');
+             else $(this).addClass('btn-success');
+         });
         });//]]>  
     </script>
-
-    </body>
