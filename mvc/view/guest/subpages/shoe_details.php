@@ -91,7 +91,7 @@
                       </tr>
                       <tr>
                           <td> <strong> Prezzo </strong> </td>
-                          <td> <?= $shoe->getPrice() ?> </td>
+                          <td> <?= $shoe->getPrice() ?> &euro; </td>
                       </tr>
                   </tbody>
                       
