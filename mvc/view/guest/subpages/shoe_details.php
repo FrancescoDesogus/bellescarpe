@@ -1,6 +1,6 @@
-     <!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
+<!-- The Bootstrap Image Gallery lightbox, should be a child element of the document body -->
      
-     <?php
+<?php
      
 //     //Codice per il QR code preso da qua: http://codematrix.altervista.org/archives/1143
 //     require("../phpqrcode/qrlib.php");
@@ -125,20 +125,22 @@
             </form>
         </div>
     </nav>
-    
-        <div id="owl-example" class="owl-carousel">
+        
+       <div id="owl-example" class="owl-carousel">
             <?php
             if(isset($video_links) && count($video_links) > 0)
             {
                 foreach($video_links as $link)
                 {
             ?>
-                    <div class="item video"> <?= $link?> </div>
+                    <div class="item video"> 
+                        <div class="js-lazyYT" data-youtube-id="<?= $link?>" data-width="100%" data-height="100%" ></div>
+                    </div>
             <?php
                 }
             }
             ?>
-            
+
             <?php
             if(isset($result) && count($result) > 0)
             {
@@ -151,7 +153,6 @@
             }
             ?>
        </div>
-
         
         <div class="container">
       <!-- Example row of columns -->
@@ -186,18 +187,28 @@
         <script src="../js/jquery-2.0.3.js"></script>
 
         <!-- Include js plugin -->
+        <script src="../js/lazyYT.min.js"></script>
         <script src="../js/owl.carousel.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
         <script>
             $(document).ready(function() {
- 
+                $('.js-lazyYT').lazyYT(); 
+                    
                 $("#owl-example").owlCarousel({
                     navigation : true, // Show next and prev buttons
                     slideSpeed : 300,
                     paginationSpeed : 400,
                     singleItem:true,                
-                    autoHeight: true
+                    autoHeight: true,
+                    rewindNav: true,
+                    afterMove: moved
                 });
+                
+                function moved() {
+                    $(".js-lazyYT").removeClass("lazyYT-video-loaded");
+                    $(".js-lazyYT").addClass("lazyYT-image-loaded");
+                    $('.js-lazyYT').lazyYT(); 
+                }
             });
         </script>
         
@@ -229,6 +240,12 @@
                    hasData || actives.data('collapse', null)
                }
            });
+           
+//           $(function(){
+//            $("#frame").on('click', function () { 
+//                $("#frame").attr("src", "http://www.youtube.com/embed/"+ "SpfMceJDjL4" +"?rel=0&autoplay=1");
+//                });
+//          });
         });//]]>  
     </script>
 

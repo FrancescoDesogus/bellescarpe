@@ -9,7 +9,7 @@
     padding-bottom: 56.25%;
 }
 
-.item.video iframe {
+.item.video iframe{
     position: absolute;
     top: 0;
     left: 0;
@@ -24,3 +24,16 @@
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
     border: none;
 }
+
+/*img,
+object {
+     max-width: 50%;
+}
+
+img {
+    width: 50%;
+    padding-left: auto;
+    padding-right: auto;
+    margin-left: auto;
+    margin-right: auto;
+}*/

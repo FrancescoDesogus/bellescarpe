@@ -27,6 +27,7 @@ include_once basename(__DIR__) . '/../Settings.php';
         <link rel="stylesheet" href="../css/owl.theme.css">
         <link rel="stylesheet" href="../css/bootstrap.min.css">
         <link rel="stylesheet" href="../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="../css/lazyYT.min.css">  
         <link rel="stylesheet" href="../css/demo.css">        
 
     </head>

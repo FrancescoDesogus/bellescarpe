@@ -80,7 +80,7 @@ class GuestController extends BaseController
                     
                         $result = glob(basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/*.*');
 
-                        for($i = 0; $i < $result.length; $i++)
+                        for($i = 0; $i < $result.length ; $i++)
                         {
                             $result[$i] = str_replace(basename(__DIR__) . '/../', "", $result[$i]);
                         }
