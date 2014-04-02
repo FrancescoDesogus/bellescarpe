@@ -80,7 +80,7 @@ class GuestController extends BaseController
                     
                         $result = glob(basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/*.*');
 
-                        for($i = 0; $i < $result.length ; $i++)
+                        for($i = 0; $i < count($result); $i++)
                         {
                             $result[$i] = str_replace(basename(__DIR__) . '/../', "", $result[$i]);
                         }
@@ -96,7 +96,7 @@ class GuestController extends BaseController
                             $video_links[] = $link;
                         }
                         
-                        fclose($fh);
+                        fclose($fileHandle);
                         
                     }
                     else
@@ -265,7 +265,7 @@ class GuestController extends BaseController
                     break;
                     
                 //Caso in cui il visitatore vuole registrarsi
-                case 'register':                    
+                case 'register':                                        
                     //Se il visitatore vuole registrarsi, mi assicuro che tutti i campi siano occupati e plausibili prima di effettuare la registrazione.
                     //La validazione viene fatta anche tramite ajax, quindi questo è solo per maggiore sicurezza
                     if(!isset($request['username']) || $request['username'] == "" || UserFactory::isUsernameOccupied($request['username'])) 
@@ -280,8 +280,8 @@ class GuestController extends BaseController
                     {
                         $viewDescriptor->setErrorMessage("Le due password inserite non sono uguali");
                     }
-                    else if(!isset($request['email']) || $request['email'] != "" || !filter_var($request['email'], FILTER_VALIDATE_EMAIL) || UserFactory::isEmailAlreadyUsed($request['email'])) 
-                    {
+                    else if(!isset($request['email']) || $request['email'] == "" || !filter_var($request['email'], FILTER_VALIDATE_EMAIL) || UserFactory::isEmailAlreadyUsed($request['email'])) 
+                    {                       
                         $viewDescriptor->setErrorMessage("L'email inserita non è valida o è già in uso da un account");
                     }
                     //Se non è nessuno dei casi qua sopra, i dati sono ok e quindi si può procedere alla registrazione

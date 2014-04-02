@@ -187,8 +187,6 @@ class UserFactory
             
             $query = "INSERT INTO Utente (id, username, password, email, facebook_id)
                       VALUES (default, '$username', '$password', '$email', '$facebookId');";
-
-            echo $query;
             
             $result = $mysqli->query($query);
             
@@ -258,7 +256,7 @@ class UserFactory
      * @return boolean true se lo username è occupato, false se è libero
      */
     public static function isEmailAlreadyUsed($email) 
-    {        
+    {                
         $mysqli = Database::connect();
         
         if(isset($mysqli))
