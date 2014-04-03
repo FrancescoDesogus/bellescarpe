@@ -34,7 +34,11 @@
                 foreach($imagesPaths as $filepath)
                 {
             ?>
-                    <div class="item slide"> <img src="<?= $filepath ?>" width="400px">  </div>
+                    <div class="item slide">
+                        <img src="<?= $filepath ?>" width="400px">
+                        <a href="#" class="ar_prev"> </a>
+                        <a href="#" class="ar_prev"> </a>
+                    </div>
             <?php
                 }
             }
@@ -121,6 +125,31 @@
         </div>
         <div class="col-md-4">
           <h2>Scarpe Simili</h2>
+            <div id="similar_shoes" class="owl-carousel">
+              <?php
+              if(isset($imagesPaths) && count($imagesPaths) > 0)
+              {
+                  foreach($imagesPaths as $filepath)
+                  {
+              ?>
+                      <div class="item slide">
+                          <div id="suggestion">
+                            <img class="suggestion_img" src="<?= $filepath ?>">
+                            <span class="suggestion_details">
+                                Prova dettagli 1 <br/>
+                                Prova dettagli 1 <br/>
+                                Prova dettagli 1 <br/>
+                                Prova dettagli 1 <br/>
+                                Prova dettagli 1 <br/>
+                            </span>
+                          </div>
+                      </div>
+              <?php
+                  }
+              }
+              ?>
+
+         </div>
         </div>
       </div>
 
@@ -153,7 +182,31 @@
 //                    items : 2,
                     autoHeight: true,
                     rewindNav: true,
-                    afterMove: moved
+                    afterMove: moved,
+                    navigationText: ["<<",">>"]
+                });
+                
+                $("#similar_shoes").owlCarousel({
+                    itemsCustom : [
+                                    [0, 2],
+                                    [450, 2],
+                                    [700, 3],
+                                    [900, 3],
+                                    [1100, 3],
+                                    [1200, 3],
+                                    [1400, 4],
+                                    [1600, 5]
+                                  ],
+                    navigation : true, // Show next and prev buttons
+                    slideSpeed : 300,
+                    paginationSpeed : 400,
+//                    singleItem: true,    
+                    items : 2,
+                    lazyLoad: true,
+//                    autoHeight: true,
+                    rewindNav: true,
+                    navigationText: ["<<",">>"]
+//                    autoPlay: 3000
                 });
                 
                 function moved() {

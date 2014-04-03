@@ -1,7 +1,9 @@
 #owl-example .item img{
     display: block;
-    width: 100%;
+    width: 50%;
     height: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .item.video {
@@ -25,14 +27,19 @@
     border: none;
 }
 
-.item.slide {
-    width: 60%;
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
-}
 .btn {
   margin-top: 1%;
   margin-bottom: 1%;
 }
 
+.suggestion_img {
+    max-width: 300px;
+    max-height: 200px;
+    display: inline;
+    float: left;
+}
+
+.suggestion_details {
+    float: right;
+    max-width: 300px;
+}
