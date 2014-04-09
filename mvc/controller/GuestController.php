@@ -94,28 +94,35 @@ class GuestController extends BaseController
                                 $imagesPaths[$i] = str_replace(basename(__DIR__) . '/../', "", $imagesPaths[$i]);
 
                             
-                            //Adesso recupero anche i link dei video da mostrare
+                            //Adesso recupero anche i link dei video da mostrare; sono in un file txt chiamato "video_links" che è messo nella stessa
+                            //cartella delle immagini. Recupero quindi il path al file
                             $video_links_txt = basename(__DIR__) . '/../../shoes_media/'.$shoe->getMediaPath().'/video_links.txt';
+                            
+                            //Apro il file in modalità lettura
                             $fileHandle = fopen($video_links_txt, 'r');
 
 
                             $video_links = null;
 
+                            //Leggo riga per riga e recupero i link, che sono solo la parte finale dei link veri e propri di youtube
                             while($link = fgets($fileHandle))
                             {
                                 $video_links[] = $link;
                             }
 
+                            //Chiudo il file
                             fclose($fileHandle);
 
 
-
+                            //Recupero le scarpe suggerite in relazione al sesso della scarpa correntemente visualizzata e alla sua categoria
                             $suggestions = ShoeFactory::getSuggestions($shoe->getId(), $shoe->getSex(), $shoe->getCategory());
+                            
+//                            $thumbnailPath = '../shoes_media/'.$shoe->getMediaPath().'/';
 
-                            foreach($suggestions as $s)
-                            {
-    //                            $s->toString();
-                            }
+//                            foreach($suggestions as $s)
+//                            {
+//                                $s->toString();
+//                            }
                         }
                         else
                             $viewDescriptor->setErrorMessage("Non c'è nessuna scarpa con quell'id");
